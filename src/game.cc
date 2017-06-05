@@ -1,40 +1,36 @@
 #include "game.h"
 #include <SDL2/SDL.h>
-#include <iostream>
+#include "graphics.h"
+#include "sprite.h"
 
 namespace {
-    const int kScreenWidth = 640;
-    const int kScreenHeight = 480;
-    const int kBitsPerPixel = 32;
     const int kFps = 60;
 }
 
 Game::Game() {
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_ShowCursor(SDL_DISABLE);
-    window_ = SDL_CreateWindow("Reconstructing Cave Story",
-                               SDL_WINDOWPOS_UNDEFINED,
-                               SDL_WINDOWPOS_UNDEFINED,
-                               kScreenWidth,
-                               kScreenHeight,
-                               SDL_WINDOW_SHOWN);
     eventLoop();
 }
 
 Game::~Game() {
-    SDL_DestroyWindow(window_);
     SDL_Quit();
 }
 
 void Game::eventLoop() {
+    Graphics graphics;
     SDL_Event event;
+
+    sprite_ = std::make_unique<Sprite>("content/MyChar.bmp",
+                                       graphics.getRenderer(),
+                                       0, 0, 32, 32);
+
     bool running = true;
     while (running) {
         const int start_time_ms = SDL_GetTicks();
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_KEYDOWN:
-                    std::cout << "*" << std::endl;
                     if (event.key.keysym.sym == SDLK_ESCAPE) {
                         running = false;
                     }
@@ -45,7 +41,7 @@ void Game::eventLoop() {
         }
 
         update();
-        draw();
+        draw(graphics);
         const int elapsed_time_ms = SDL_GetTicks() - start_time_ms;
         const int delay = 1000 / kFps - elapsed_time_ms;
         if (delay > 0) {
@@ -58,6 +54,8 @@ void Game::update() {
 
 }
 
-void Game::draw() {
-
+void Game::draw(Graphics& graphics) {
+    graphics.clear();
+    sprite_->draw(graphics, 320, 240);
+    graphics.flip();
 }
