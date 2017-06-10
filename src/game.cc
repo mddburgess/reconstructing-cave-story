@@ -26,7 +26,7 @@ void Game::eventLoop() {
     Input input;
     SDL_Event event;
 
-    player_ = std::make_unique<Player>(320, 240, graphics);
+    player_ = std::make_unique<Player>(graphics, 320, 240);
 
     bool running = true;
     int last_update_time = SDL_GetTicks();

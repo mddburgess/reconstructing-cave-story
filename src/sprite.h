@@ -7,8 +7,8 @@
 struct Graphics;
 
 struct Sprite {
-    Sprite(const std::string& file_path,
-           SDL_Renderer* renderer,
+    Sprite(Graphics& graphics,
+           const std::string& file_path,
            int source_x, int source_y,
            int width, int height);
     virtual ~Sprite();

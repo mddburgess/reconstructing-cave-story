@@ -1,23 +1,30 @@
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
+#include <string>
+#include <map>
+
 struct SDL_Window;
 struct SDL_Texture;
 struct SDL_Rect;
 struct SDL_Renderer;
 
 struct Graphics {
+    typedef SDL_Texture* TextureID;
+
     Graphics();
     ~Graphics();
 
-    void blitSurface(SDL_Texture* source,
+    TextureID loadImage(const std::string& file_path);
+
+    void blitSurface(TextureID source,
                      SDL_Rect* source_rectangle,
                      SDL_Rect* destination_rectangle);
     void clear();
     void flip();
-    SDL_Renderer* getRenderer();
 
 private:
+    std::map<std::string, SDL_Texture*> sprite_sheets_;
     SDL_Window* window_;
     SDL_Renderer* renderer_;
 };

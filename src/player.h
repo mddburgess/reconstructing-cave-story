@@ -7,7 +7,7 @@
 struct Graphics;
 
 struct Player {
-    Player(int x, int y, Graphics& graphics);
+    Player(Graphics& graphics, int x, int y);
 
     void update(int elapsed_time_ms);
     void draw(Graphics& graphics);
