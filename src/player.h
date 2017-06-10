@@ -17,6 +17,9 @@ struct Player {
     void startMovingRight();
     void stopMoving();
 
+    void startJump();
+    void stopJump();
+
 private:
     enum MotionType {
         STANDING,
@@ -38,13 +41,31 @@ private:
     };
     friend bool operator<(const SpriteState& a, const SpriteState& b);
 
+    struct Jump {
+        Jump() : time_remaining_ms_(0), active_(false) {}
+
+        void update(int elapsed_time_ms);
+        void reset();
+        void reactivate() { active_ = time_remaining_ms_ > 0; }
+        void deactivate() { active_ = false; };
+        bool active() const { return active_; }
+
+    private:
+        int time_remaining_ms_;
+        bool active_;
+    };
+
     void initializeSprites(Graphics& graphics);
     SpriteState getSpriteState();
 
+    bool onGround() const { return on_ground_; }
+
     int x_, y_;
-    float velocity_x_;
+    float velocity_x_, velocity_y_;
     float acceleration_x_;
     HorizontalFacing horizontal_facing_;
+    bool on_ground_;
+    Jump jump_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
 };
 
