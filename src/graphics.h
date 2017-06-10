@@ -24,7 +24,8 @@ struct Graphics {
     void flip();
 
 private:
-    std::map<std::string, SDL_Texture*> sprite_sheets_;
+    typedef std::map<std::string, SDL_Texture*> SpriteMap;
+    SpriteMap sprite_sheets_;
     SDL_Window* window_;
     SDL_Renderer* renderer_;
 };
