@@ -3,7 +3,7 @@
 
 #include <memory>
 
-struct AnimatedSprite;
+struct Player;
 struct Graphics;
 
 struct Game {
@@ -17,7 +17,7 @@ private:
     void update(int elapsed_time_ms);
     void draw(Graphics& graphics);
 
-    std::unique_ptr<AnimatedSprite> sprite_;
+    std::unique_ptr<Player> player_;
 };
 
 #endif // GAME_H_
