@@ -14,6 +14,7 @@ Graphics::Graphics() {
                                kScreenHeight,
                                SDL_WINDOW_SHOWN);
     renderer_ = SDL_CreateRenderer(window_, -1, 0);
+    SDL_ShowCursor(SDL_DISABLE);
 }
 
 Graphics::~Graphics() {

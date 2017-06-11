@@ -5,6 +5,7 @@
 
 struct Player;
 struct Graphics;
+struct Map;
 
 struct Game {
     Game();
@@ -18,6 +19,7 @@ private:
     void draw(Graphics& graphics);
 
     std::unique_ptr<Player> player_;
+    std::unique_ptr<Map> map_;
 };
 
 #endif // GAME_H_
