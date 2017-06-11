@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <map>
+#include <array>
 #include "sprite.h"
 
 struct Graphics;
@@ -17,6 +18,10 @@ struct Player {
     void startMovingRight();
     void stopMoving();
 
+    void lookUp();
+    void lookDown();
+    void lookHorizontal();
+
     void startJump();
     void stopJump();
 
@@ -24,20 +29,35 @@ private:
     enum MotionType {
         STANDING,
         WALKING,
+        JUMPING,
+        FALLING
     };
+    std::array<MotionType,4> motion_types = {STANDING, WALKING, JUMPING, FALLING};
+
     enum HorizontalFacing {
         LEFT,
         RIGHT
     };
+    std::array<HorizontalFacing,2> horizontal_facings = {LEFT, RIGHT};
+
+    enum VerticalFacing {
+        UP,
+        DOWN,
+        HORIZONTAL
+    };
+    std::array<VerticalFacing,3> vertical_facings = {UP, DOWN, HORIZONTAL};
 
     struct SpriteState {
         SpriteState(MotionType motion_type = STANDING,
-                    HorizontalFacing horizontal_facing = LEFT) :
+                    HorizontalFacing horizontal_facing = LEFT,
+                    VerticalFacing vertical_facing = HORIZONTAL) :
             motion_type(motion_type),
-            horizontal_facing(horizontal_facing) {}
+            horizontal_facing(horizontal_facing),
+            vertical_facing(vertical_facing) {}
 
         MotionType motion_type;
         HorizontalFacing horizontal_facing;
+        VerticalFacing  vertical_facing;
     };
     friend bool operator<(const SpriteState& a, const SpriteState& b);
 
@@ -56,6 +76,7 @@ private:
     };
 
     void initializeSprites(Graphics& graphics);
+    void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);
     SpriteState getSpriteState();
 
     bool onGround() const { return on_ground_; }
@@ -64,6 +85,7 @@ private:
     float velocity_x_, velocity_y_;
     float acceleration_x_;
     HorizontalFacing horizontal_facing_;
+    VerticalFacing  vertical_facing_;
     bool on_ground_;
     Jump jump_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;

@@ -59,6 +59,14 @@ void Game::eventLoop() {
             player_->startMovingRight();
         }
 
+        if (input.isKeyHeld(SDLK_UP) == input.isKeyHeld(SDLK_DOWN)) {
+            player_->lookHorizontal();
+        } else if (input.isKeyHeld(SDLK_UP)) {
+            player_->lookUp();
+        } else if (input.isKeyHeld(SDLK_DOWN)) {
+            player_->lookDown();
+        }
+
         // Player jump
         if (input.wasKeyPressed(SDLK_z)) {
             player_->startJump();
