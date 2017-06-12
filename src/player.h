@@ -86,6 +86,9 @@ private:
     Rectangle topCollision(int delta) const;
     Rectangle bottomCollision(int delta) const;
 
+    void updateX(int elapsed_time_ms, const Map& map);
+    void updateY(int elapsed_time_ms, const Map& map);
+
     bool onGround() const { return on_ground_; }
 
     int x_, y_;

@@ -37,7 +37,7 @@ Map* Map::createTestMap(Graphics& graphics) {
 
 std::vector<Map::CollisionTile> Map::getCollidingTiles(const Rectangle& rectangle) const {
     const int first_row = rectangle.top() / Game::kTileSize;
-    const int last_row = rectangle.top() / Game::kTileSize;
+    const int last_row = rectangle.bottom() / Game::kTileSize;
     const int first_col = rectangle.left() / Game::kTileSize;
     const int last_col = rectangle.right() / Game::kTileSize;
     std::vector<CollisionTile> collision_tiles;
