@@ -2,7 +2,10 @@
 #include "game.h"
 #include "graphics.h"
 #include "animated_sprite.h"
+#include "map.h"
+#include "rectangle.h"
 #include <cmath>
+#include <cassert>
 
 namespace {
     // Walk motion
@@ -34,6 +37,10 @@ namespace {
     // Walk animation
     const int kNumWalkFrames = 3;
     const int kWalkFps = 15;
+
+    // Collision rectangle
+    const Rectangle kCollisionX(6, 10, 20, 12);
+    const Rectangle kCollisionY(10, 2, 12, 30);
 }
 
 bool operator<(const Player::SpriteState& a, const Player::SpriteState& b) {
@@ -62,7 +69,7 @@ Player::Player(Graphics& graphics, int x, int y) :
     initializeSprites(graphics);
 }
 
-void Player::update(int elapsed_time_ms) {
+void Player::update(int elapsed_time_ms, const Map& map) {
     sprites_[getSpriteState()]->update(elapsed_time_ms);
     jump_.update(elapsed_time_ms);
 
@@ -207,4 +214,36 @@ void Player::Jump::update(int elapsed_time_ms) {
             active_ = false;
         }
     }
+}
+
+Rectangle Player::leftCollision(int delta) const {
+    assert(delta <= 0);
+    return Rectangle(x_ + kCollisionX.left() + delta,
+                     y_ + kCollisionX.top(),
+                     kCollisionX.width() / 2 - delta,
+                     kCollisionX.height());
+}
+
+Rectangle Player::rightCollision(int delta) const {
+    assert(delta >= 0);
+    return Rectangle(x_ + kCollisionX.left() + kCollisionX.width() / 2,
+                     y_ + kCollisionX.top(),
+                     kCollisionX.width() / 2 + delta,
+                     kCollisionX.height());
+}
+
+Rectangle Player::topCollision(int delta) const {
+    assert(delta <= 0);
+    return Rectangle(x_ + kCollisionY.left(),
+                     y_ + kCollisionY.top() + delta,
+                     kCollisionY.width(),
+                     kCollisionY.height() / 2 - delta);
+}
+
+Rectangle Player::bottomCollision(int delta) const {
+    assert(delta >= 0);
+    return Rectangle(x_ + kCollisionY.left(),
+                     y_ + kCollisionY.top() + kCollisionY.height() / 2,
+                     kCollisionY.width(),
+                     kCollisionY.height() / 2 + delta);
 }

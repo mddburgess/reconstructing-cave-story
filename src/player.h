@@ -5,13 +5,15 @@
 #include <map>
 #include <array>
 #include "sprite.h"
+#include "rectangle.h"
 
 struct Graphics;
+struct Map;
 
 struct Player {
     Player(Graphics& graphics, int x, int y);
 
-    void update(int elapsed_time_ms);
+    void update(int elapsed_time_ms, const Map& map);
     void draw(Graphics& graphics);
 
     void startMovingLeft();
@@ -78,6 +80,11 @@ private:
     void initializeSprites(Graphics& graphics);
     void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);
     SpriteState getSpriteState();
+
+    Rectangle leftCollision(int delta) const;
+    Rectangle rightCollision(int delta) const;
+    Rectangle topCollision(int delta) const;
+    Rectangle bottomCollision(int delta) const;
 
     bool onGround() const { return on_ground_; }
 
