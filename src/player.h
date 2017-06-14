@@ -30,11 +30,12 @@ struct Player {
 private:
     enum MotionType {
         STANDING,
+        INTERACTING,
         WALKING,
         JUMPING,
         FALLING
     };
-    std::array<MotionType,4> motion_types = {STANDING, WALKING, JUMPING, FALLING};
+    std::array<MotionType,5> motion_types = {STANDING, INTERACTING, WALKING, JUMPING, FALLING};
 
     enum HorizontalFacing {
         LEFT,
@@ -63,20 +64,6 @@ private:
     };
     friend bool operator<(const SpriteState& a, const SpriteState& b);
 
-    struct Jump {
-        Jump() : time_remaining_ms_(0), active_(false) {}
-
-        void update(int elapsed_time_ms);
-        void reset();
-        void reactivate() { active_ = time_remaining_ms_ > 0; }
-        void deactivate() { active_ = false; };
-        bool active() const { return active_; }
-
-    private:
-        int time_remaining_ms_;
-        bool active_;
-    };
-
     void initializeSprites(Graphics& graphics);
     void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);
     SpriteState getSpriteState();
@@ -93,11 +80,12 @@ private:
 
     int x_, y_;
     float velocity_x_, velocity_y_;
-    float acceleration_x_;
+    int acceleration_x_;
     HorizontalFacing horizontal_facing_;
     VerticalFacing  vertical_facing_;
     bool on_ground_;
-    Jump jump_;
+    bool jump_active_;
+    bool interacting_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
 };
 
