@@ -9,18 +9,18 @@
 
 namespace {
     // Walk motion
-    const float kWalkingAcceleration = 0.00083007812; // pixels / ms^2
-    const float kMaxSpeedX = 0.15859375; // pixels / ms
-    const float kFriction = 0.00049804687; // pixels / ms^2
+    const float kWalkingAcceleration = Game::gameUnitsToPixels(0.00083007812f); // pixels / ms^2
+    const float kMaxSpeedX = Game::gameUnitsToPixels(0.15859375f); // pixels / ms
+    const float kFriction = Game::gameUnitsToPixels(0.00049804687f); // pixels / ms^2
 
     // Fall motion
-    const float kGravity = 0.00078125; // pixels / ms^2
-    const float kMaxSpeedY = 0.2998046875; // pixels / ms
+    const float kGravity = Game::gameUnitsToPixels(0.00078125f); // pixels / ms^2
+    const float kMaxSpeedY = Game::gameUnitsToPixels(0.2998046875f); // pixels / ms
 
     // Jump motion
-    const float kJumpSpeed = 0.25f; // pixels / ms
-    const float kAirAcceleration = 0.0003125f; // pixels / ms^2
-    const float kJumpGravity = 0.0003125f; // pixels / ms^2
+    const float kJumpSpeed = Game::gameUnitsToPixels(0.25f); // pixels / ms
+    const float kAirAcceleration = Game::gameUnitsToPixels(0.0003125f); // pixels / ms^2
+    const float kJumpGravity = Game::gameUnitsToPixels(0.0003125f); // pixels / ms^2
 
     // Sprites
     const std::string kSpriteFilePath("content/MyChar.bmp");
@@ -40,8 +40,15 @@ namespace {
     const int kWalkFps = 15;
 
     // Collision rectangle
-    const Rectangle kCollisionX(6, 10, 20, 12);
-    const Rectangle kCollisionY(10, 2, 12, 30);
+    const Rectangle kCollisionX(Game::gameUnitsToPixels(6),
+                                Game::gameUnitsToPixels(10),
+                                Game::gameUnitsToPixels(20),
+                                Game::gameUnitsToPixels(12));
+
+    const Rectangle kCollisionY(Game::gameUnitsToPixels(10),
+                                Game::gameUnitsToPixels(2),
+                                Game::gameUnitsToPixels(12),
+                                Game::gameUnitsToPixels(30));
 
     struct CollisionInfo {
         bool collided;
