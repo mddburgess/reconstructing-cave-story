@@ -10,6 +10,7 @@
 Map* Map::createTestMap(Graphics& graphics) {
     Map* map = new Map();
 
+    map->backdrop_ = std::make_unique<FixedBackdrop>("content/bkBlue.bmp", graphics);
     const int num_rows = 15;
     const int num_cols = 20;
     map->tiles_ = std::vector<std::vector<Tile>>(
@@ -59,6 +60,10 @@ void Map::update(int elapsed_time_ms) {
             }
         }
     }
+}
+
+void Map::drawBackground(Graphics& graphics) const {
+    backdrop_->draw(graphics);
 }
 
 void Map::draw(Graphics& graphics) const {

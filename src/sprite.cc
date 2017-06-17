@@ -5,7 +5,8 @@ Sprite::Sprite(Graphics& graphics,
                const std::string& file_path,
                int source_x, int source_y,
                int width, int height) {
-    sprite_sheet_ = graphics.loadImage(file_path);
+    const bool black_is_transparent = true;
+    sprite_sheet_ = graphics.loadImage(file_path, black_is_transparent);
     source_rect_.x = source_x;
     source_rect_.y = source_y;
     source_rect_.w = width;

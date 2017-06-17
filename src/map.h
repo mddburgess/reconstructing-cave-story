@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include "backdrop.h"
 
 struct Graphics;
 struct Sprite;
@@ -26,6 +27,7 @@ struct Map {
 
     std::vector<CollisionTile> getCollidingTiles(const Rectangle& rectangle) const;
     void update(int elapsed_time_ms);
+    void drawBackground(Graphics& graphics) const;
     void draw(Graphics& graphics) const;
 
 private:
@@ -38,6 +40,7 @@ private:
         TileType tile_type;
         std::shared_ptr<Sprite> sprite;
     };
+    std::unique_ptr<Backdrop> backdrop_;
     std::vector<std::vector<Tile>> tiles_;
 };
 

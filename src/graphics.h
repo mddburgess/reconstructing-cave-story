@@ -15,7 +15,7 @@ struct Graphics {
     Graphics();
     ~Graphics();
 
-    TextureID loadImage(const std::string& file_path);
+    TextureID loadImage(const std::string& file_path, bool black_is_transparent = false);
 
     void blitSurface(TextureID source,
                      SDL_Rect* source_rectangle,
