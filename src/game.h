@@ -2,6 +2,7 @@
 #define GAME_H_
 
 #include <memory>
+#include "units.h"
 
 struct Player;
 struct Graphics;
@@ -20,7 +21,7 @@ struct Game {
 
 private:
     void eventLoop();
-    void update(int elapsed_time_ms);
+    void update(units::MS elapsed_time_ms);
     void draw(Graphics& graphics);
 
     std::unique_ptr<Player> player_;

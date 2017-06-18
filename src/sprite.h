@@ -3,6 +3,7 @@
 
 #include <string>
 #include <SDL2/SDL.h>
+#include "units.h"
 
 struct Graphics;
 
@@ -12,7 +13,7 @@ struct Sprite {
            int source_x, int source_y,
            int width, int height);
 
-    virtual void update(int /*elapsed_time_ms*/) {}
+    virtual void update(units::MS) {}
     void draw(Graphics& graphics, int x, int y);
 
 protected:

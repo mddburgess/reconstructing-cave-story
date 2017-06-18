@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include "backdrop.h"
+#include "units.h"
 
 struct Graphics;
 struct Sprite;
@@ -26,7 +27,7 @@ struct Map {
     static Map* createTestMap(Graphics& graphics);
 
     std::vector<CollisionTile> getCollidingTiles(const Rectangle& rectangle) const;
-    void update(int elapsed_time_ms);
+    void update(units::MS elapsed_time_ms);
     void drawBackground(Graphics& graphics) const;
     void draw(Graphics& graphics) const;
 

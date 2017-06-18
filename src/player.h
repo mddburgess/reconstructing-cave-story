@@ -6,6 +6,7 @@
 #include <array>
 #include "sprite.h"
 #include "rectangle.h"
+#include "units.h"
 
 struct Graphics;
 struct Map;
@@ -13,7 +14,7 @@ struct Map;
 struct Player {
     Player(Graphics& graphics, int x, int y);
 
-    void update(int elapsed_time_ms, const Map& map);
+    void update(units::MS elapsed_time_ms, const Map& map);
     void draw(Graphics& graphics);
 
     void startMovingLeft();
@@ -73,13 +74,13 @@ private:
     Rectangle topCollision(int delta) const;
     Rectangle bottomCollision(int delta) const;
 
-    void updateX(int elapsed_time_ms, const Map& map);
-    void updateY(int elapsed_time_ms, const Map& map);
+    void updateX(units::MS elapsed_time_ms, const Map& map);
+    void updateY(units::MS elapsed_time_ms, const Map& map);
 
     bool onGround() const { return on_ground_; }
 
     int x_, y_;
-    float velocity_x_, velocity_y_;
+    units::Velocity velocity_x_, velocity_y_;
     int acceleration_x_;
     HorizontalFacing horizontal_facing_;
     VerticalFacing  vertical_facing_;
