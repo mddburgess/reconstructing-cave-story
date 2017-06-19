@@ -6,8 +6,8 @@ Graphics::Graphics() {
     window_ = SDL_CreateWindow("Reconstructing Cave Story",
                                SDL_WINDOWPOS_UNDEFINED,
                                SDL_WINDOWPOS_UNDEFINED,
-                               Game::kScreenWidth,
-                               Game::kScreenHeight,
+                               units::tileToPixel(Game::kScreenWidth),
+                               units::tileToPixel(Game::kScreenHeight),
                                SDL_WINDOW_SHOWN);
     renderer_ = SDL_CreateRenderer(window_, -1, 0);
     SDL_ShowCursor(SDL_DISABLE);

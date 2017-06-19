@@ -10,9 +10,8 @@ namespace {
 }
 
 // static
-int Game::kTileSize = 16;
-int Game::kScreenWidth = 20 * Game::kTileSize;
-int Game::kScreenHeight = 15 * Game::kTileSize;
+units::Tile Game::kScreenWidth = 20;
+units::Tile Game::kScreenHeight = 15;
 
 Game::Game() {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -28,7 +27,9 @@ void Game::eventLoop() {
     Input input;
     SDL_Event event;
 
-    player_ = std::make_unique<Player>(graphics, kScreenWidth / 2, kScreenHeight / 2);
+    player_ = std::make_unique<Player>(graphics,
+                                       units::tileToGame(kScreenWidth / 2),
+                                       units::tileToGame(kScreenHeight / 2));
     map_.reset(Map::createTestMap(graphics));
 
     bool running = true;

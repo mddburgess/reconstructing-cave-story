@@ -12,7 +12,7 @@ struct Graphics;
 struct Map;
 
 struct Player {
-    Player(Graphics& graphics, int x, int y);
+    Player(Graphics& graphics, units::Game x, units::Game y);
 
     void update(units::MS elapsed_time_ms, const Map& map);
     void draw(Graphics& graphics);
@@ -69,17 +69,17 @@ private:
     void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);
     SpriteState getSpriteState();
 
-    Rectangle leftCollision(int delta) const;
-    Rectangle rightCollision(int delta) const;
-    Rectangle topCollision(int delta) const;
-    Rectangle bottomCollision(int delta) const;
+    Rectangle leftCollision(units::Game delta) const;
+    Rectangle rightCollision(units::Game delta) const;
+    Rectangle topCollision(units::Game delta) const;
+    Rectangle bottomCollision(units::Game delta) const;
 
     void updateX(units::MS elapsed_time_ms, const Map& map);
     void updateY(units::MS elapsed_time_ms, const Map& map);
 
     bool onGround() const { return on_ground_; }
 
-    int x_, y_;
+    units::Game x_, y_;
     units::Velocity velocity_x_, velocity_y_;
     int acceleration_x_;
     HorizontalFacing horizontal_facing_;

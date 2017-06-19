@@ -8,6 +8,7 @@ namespace units {
     typedef float Game;
     typedef int Pixel;
     typedef unsigned int Tile;
+    typedef unsigned int Frame;
 
     typedef unsigned int MS;
     typedef unsigned int FPS;

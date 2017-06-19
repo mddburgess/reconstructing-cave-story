@@ -16,11 +16,11 @@ struct Map {
         WALL_TILE
     };
     struct CollisionTile {
-        CollisionTile(int row, int col, TileType tile_type)
+        CollisionTile(units::Tile row, units::Tile col, TileType tile_type)
             : row(row),
               col(col),
               tile_type(tile_type) {}
-        int row, col;
+        units::Tile row, col;
         TileType tile_type;
     };
 

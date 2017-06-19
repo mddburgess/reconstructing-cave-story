@@ -11,8 +11,8 @@ Map* Map::createTestMap(Graphics& graphics) {
     Map* map = new Map();
 
     map->backdrop_ = std::make_unique<FixedBackdrop>("content/bkBlue.bmp", graphics);
-    const int num_rows = 15;
-    const int num_cols = 20;
+    const units::Tile num_rows = 15;
+    const units::Tile num_cols = 20;
     map->tiles_ = std::vector<std::vector<Tile>>(
             num_rows, std::vector<Tile>(
                     num_cols, Tile()
@@ -26,10 +26,11 @@ Map* Map::createTestMap(Graphics& graphics) {
 
     std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(
             graphics, "content/PrtCave.bmp",
-            Game::kTileSize, 0, Game::kTileSize, Game::kTileSize);
+            units::tileToPixel(1), 0,
+            units::tileToPixel(1), units::tileToPixel(1));
     Tile tile(WALL_TILE, sprite);
-    const int row = 11;
-    for (int col = 0; col < num_cols; ++col) {
+    const units::Tile row = 11;
+    for (units::Tile col = 0; col < num_cols; ++col) {
         map->tiles_[row][col] = tile;
     }
     map->tiles_[10][5] = tile;
@@ -40,16 +41,16 @@ Map* Map::createTestMap(Graphics& graphics) {
 
     std::shared_ptr<Sprite> chain_top = std::make_shared<Sprite>(
             graphics, "content/PrtCave.bmp",
-            11 * Game::kTileSize, 2 * Game::kTileSize,
-            Game::kTileSize, Game::kTileSize);
+            units::tileToPixel(11), units::tileToPixel(2),
+            units::tileToPixel(1), units::tileToPixel(1));
     std::shared_ptr<Sprite> chain_middle = std::make_shared<Sprite>(
             graphics, "content/PrtCave.bmp",
-            12 * Game::kTileSize, 2 * Game::kTileSize,
-            Game::kTileSize, Game::kTileSize);
+            units::tileToPixel(12), units::tileToPixel(2),
+            units::tileToPixel(1), units::tileToPixel(1));
     std::shared_ptr<Sprite> chain_bottom = std::make_shared<Sprite>(
             graphics, "content/PrtCave.bmp",
-            13 * Game::kTileSize, 2 * Game::kTileSize,
-            Game::kTileSize, Game::kTileSize);
+            units::tileToPixel(13), units::tileToPixel(2),
+            units::tileToPixel(1), units::tileToPixel(1));
     map->background_tiles_[8][2] = chain_top;
     map->background_tiles_[9][2] = chain_middle;
     map->background_tiles_[10][2] = chain_bottom;
@@ -58,14 +59,14 @@ Map* Map::createTestMap(Graphics& graphics) {
 }
 
 std::vector<Map::CollisionTile> Map::getCollidingTiles(const Rectangle& rectangle) const {
-    const int first_row = rectangle.top() / Game::kTileSize;
-    const int last_row = rectangle.bottom() / Game::kTileSize;
-    const int first_col = rectangle.left() / Game::kTileSize;
-    const int last_col = rectangle.right() / Game::kTileSize;
+    const units::Tile first_row = units::gameToTile(rectangle.top());
+    const units::Tile last_row = units::gameToTile(rectangle.bottom());
+    const units::Tile first_col = units::gameToTile(rectangle.left());
+    const units::Tile last_col = units::gameToTile(rectangle.right());
     std::vector<CollisionTile> collision_tiles;
 
-    for (int row = first_row; row <= last_row; ++row) {
-        for (int col = first_col; col <= last_col; ++col) {
+    for (units::Tile row = first_row; row <= last_row; ++row) {
+        for (units::Tile col = first_col; col <= last_col; ++col) {
             collision_tiles.push_back(CollisionTile(row, col, tiles_[row][col].tile_type));
         }
     }
@@ -89,7 +90,7 @@ void Map::drawBackground(Graphics& graphics) const {
         for (size_t col = 0; col < background_tiles_[row].size(); ++col) {
             if (background_tiles_[row][col]) {
                 background_tiles_[row][col]->draw(
-                        graphics, col * Game::kTileSize, row * Game::kTileSize);
+                        graphics, units::tileToGame(col), units::tileToGame(row));
             }
         }
     }
@@ -100,7 +101,7 @@ void Map::draw(Graphics& graphics) const {
         for (size_t col = 0; col < tiles_[row].size(); ++col) {
             if (tiles_[row][col].sprite) {
                 tiles_[row][col].sprite->draw(
-                        graphics, col * Game::kTileSize, row * Game::kTileSize);
+                        graphics, units::tileToGame(col), units::tileToGame(row));
             }
         }
     }
