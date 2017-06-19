@@ -7,6 +7,7 @@
 struct Player;
 struct Graphics;
 struct Map;
+struct FirstCaveBat;
 
 struct Game {
     Game();
@@ -21,6 +22,7 @@ private:
     void draw(Graphics& graphics);
 
     std::unique_ptr<Player> player_;
+    std::unique_ptr<FirstCaveBat> bat_;
     std::unique_ptr<Map> map_;
 };
 

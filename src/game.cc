@@ -4,6 +4,7 @@
 #include "player.h"
 #include "input.h"
 #include "map.h"
+#include "first_cave_bat.h"
 
 namespace {
     const units::FPS kFps = 60;
@@ -31,6 +32,9 @@ void Game::eventLoop() {
     player_ = std::make_unique<Player>(graphics,
                                        units::tileToGame(kScreenWidth / 2),
                                        units::tileToGame(kScreenHeight / 2));
+    bat_ = std::make_unique<FirstCaveBat>(graphics,
+                                          units::tileToGame(5),
+                                          units::tileToGame(kScreenHeight / 2));
     map_.reset(Map::createTestMap(graphics));
 
     bool running = true;
@@ -95,12 +99,14 @@ void Game::eventLoop() {
 
 void Game::update(units::MS elapsed_time_ms) {
     player_->update(elapsed_time_ms, *map_);
+    bat_->update(elapsed_time_ms);
     map_->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();
     map_->drawBackground(graphics);
+    bat_->draw(graphics);
     player_->draw(graphics);
     map_->draw(graphics);
     graphics.flip();
