@@ -15,6 +15,7 @@ struct FirstCaveBat {
 
 private:
     units::Game x_, y_;
+    units::Degrees flight_angle_;
     std::shared_ptr<Sprite> sprite_;
 };
 

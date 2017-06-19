@@ -9,15 +9,18 @@ namespace units {
     typedef int Pixel;
     typedef unsigned int Tile;
     typedef unsigned int Frame;
+    typedef float Degrees;
 
     typedef unsigned int MS;
     typedef unsigned int FPS;
 
     typedef float Velocity; // Game / MS
     typedef float Acceleration; // Game / MS^2
+    typedef float AngularVelocity; // Degrees / MS
 
     namespace {
         const Game kTileSize = 32.0f;
+        const double kPi = atan(1) * 4;
     }
 
     inline Pixel gameToPixel(Game game) {
@@ -34,6 +37,10 @@ namespace units {
 
     inline Pixel tileToPixel(Tile tile) {
         return gameToPixel(tileToGame(tile));
+    }
+
+    inline double degreesToRadians(Degrees degrees) {
+        return degrees * kPi / 180.0f;
     }
 }
 
