@@ -21,7 +21,7 @@ namespace units {
     }
 
     inline Pixel gameToPixel(Game game) {
-        return Pixel(round(game / 2));
+        return Pixel(game);
     }
 
     inline Tile gameToTile(Game game) {
