@@ -33,8 +33,8 @@ void Game::eventLoop() {
                                        units::tileToGame(kScreenWidth / 2),
                                        units::tileToGame(kScreenHeight / 2));
     bat_ = std::make_unique<FirstCaveBat>(graphics,
-                                          units::tileToGame(5),
-                                          units::tileToGame(kScreenHeight / 2));
+                                          units::tileToGame(7),
+                                          units::tileToGame(kScreenHeight / 2 + 1));
     map_.reset(Map::createTestMap(graphics));
 
     bool running = true;
@@ -100,7 +100,10 @@ void Game::eventLoop() {
 void Game::update(units::MS elapsed_time_ms) {
     player_->update(elapsed_time_ms, *map_);
     bat_->update(elapsed_time_ms, player_->center_x());
-    map_->update(elapsed_time_ms);
+
+    if (bat_->damageRectangle().collidesWith(player_->damageRectangle())) {
+        printf("Do damage to Quote!\n");
+    }
 }
 
 void Game::draw(Graphics& graphics) {

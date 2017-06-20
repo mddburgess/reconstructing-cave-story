@@ -11,7 +11,8 @@ namespace {
 }
 
 FirstCaveBat::FirstCaveBat(Graphics& graphics, units::Game x, units::Game y)
-    : x_(x),
+    : center_y_(y),
+      x_(x),
       y_(y),
       facing_(RIGHT),
       flight_angle_(0.0f)
@@ -22,12 +23,15 @@ FirstCaveBat::FirstCaveBat(Graphics& graphics, units::Game x, units::Game y)
 void FirstCaveBat::update(units::MS elapsed_time, units::Game player_x) {
     flight_angle_ += kAngularVelocity * elapsed_time;
     facing_ = x_ + units::tileToGame(1) / 2.0f > player_x ? LEFT : RIGHT;
+
+    y_ = center_y_ + units::tileToGame(5) / 2.0f * units::Game(
+            std::sin(units::degreesToRadians(flight_angle_)));
+
     sprites_[getSpriteState()]->update(elapsed_time);
 }
 
 void FirstCaveBat::draw(Graphics& graphics) const {
-    const units::Game y = y_ + units::tileToGame(5) / 2.0f * std::sin(units::degreesToRadians(flight_angle_));
-    sprites_.at(getSpriteState())->draw(graphics, x_, y);
+    sprites_.at(getSpriteState())->draw(graphics, x_, y_);
 }
 
 void FirstCaveBat::initializeSprites(Graphics& graphics) {
