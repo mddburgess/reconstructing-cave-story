@@ -28,6 +28,8 @@ struct Player {
     void startJump();
     void stopJump();
 
+    void takeDamage();
+
     Rectangle damageRectangle() const;
     units::Game center_x() const { return x_ + units::tileToGame(1) / 2.0f; }
 
@@ -90,6 +92,8 @@ private:
     bool on_ground_;
     bool jump_active_;
     bool interacting_;
+    bool invincible_;
+    units::MS invincible_time_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
 };
 
