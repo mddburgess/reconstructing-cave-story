@@ -16,6 +16,7 @@ struct Player {
 
     void update(units::MS elapsed_time_ms, const Map& map);
     void draw(Graphics& graphics);
+    void drawHUD(Graphics& graphics) const;
 
     void startMovingLeft();
     void startMovingRight();
@@ -31,7 +32,7 @@ struct Player {
     void takeDamage();
 
     Rectangle damageRectangle() const;
-    units::Game center_x() const { return x_ + units::tileToGame(1) / 2.0f; }
+    units::Game center_x() const { return x_ + units::kHalfTile; }
 
 private:
     enum MotionType {
@@ -84,6 +85,8 @@ private:
 
     bool onGround() const { return on_ground_; }
 
+    bool spriteIsVisible() const;
+
     units::Game x_, y_;
     units::Velocity velocity_x_, velocity_y_;
     int acceleration_x_;
@@ -95,6 +98,9 @@ private:
     bool invincible_;
     units::MS invincible_time_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
+    std::unique_ptr<Sprite> health_bar_sprite_;
+    std::unique_ptr<Sprite> health_fill_sprite_;
+    std::unique_ptr<Sprite> three_;
 };
 
 #endif // PLAYER_H_

@@ -28,7 +28,8 @@ Graphics::TextureID Graphics::loadImage(const std::string& file_path,
     if (sprite_sheets_.count(file_path) == 0) {
         SDL_Surface* surface = SDL_LoadBMP(file_path.c_str());
         if (black_is_transparent) {
-            SDL_SetColorKey(surface, SDL_TRUE, 0);
+            const Uint32 black_colour = SDL_MapRGB(surface->format, 0, 0, 0);
+            SDL_SetColorKey(surface, SDL_TRUE, black_colour);
         }
         sprite_sheets_[file_path] = SDL_CreateTextureFromSurface(renderer_, surface);
         SDL_FreeSurface(surface);

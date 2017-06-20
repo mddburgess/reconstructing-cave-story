@@ -47,6 +47,20 @@ namespace {
     const units::MS kInvincibleFlashTime = 50;
     const units::MS kInvincibleTime = 3000;
 
+    // HUD Constants
+    const units::Game kHealthBarX = units::tileToGame(1);
+    const units::Game kHealthBarY = units::tileToGame(2);
+    const units::Game kHealthBarSourceX = 0;
+    const units::Game kHealthBarSourceY = 5 * units::kHalfTile;
+    const units::Tile kHealthBarSourceWidth = 4;
+    const units::Game kHealthBarSourceHeight = units::kHalfTile;
+
+    const units::Game kHealthFillX = 5 * units::kHalfTile;
+    const units::Game kHealthFillY = units::tileToGame(2);
+    const units::Game kHealthFillSourceX = 0;
+    const units::Game kHealthFillSourceY = 3 * units::kHalfTile;
+    const units::Game kHealthFillSourceHeight = units::kHalfTile;
+
     struct CollisionInfo {
         bool collided;
         units::Tile row, col;
@@ -108,10 +122,17 @@ void Player::update(units::MS elapsed_time_ms, const Map& map) {
 }
 
 void Player::draw(Graphics& graphics) {
-    if (invincible_ && (invincible_time_ / kInvincibleFlashTime) % 2 == 0) {
-        return;
+    if (spriteIsVisible()) {
+        sprites_[getSpriteState()]->draw(graphics, x_, y_);
     }
-    sprites_[getSpriteState()]->draw(graphics, x_, y_);
+}
+
+void Player::drawHUD(Graphics& graphics) const {
+    health_bar_sprite_->draw(graphics, kHealthBarX, kHealthBarY);
+    if (spriteIsVisible()) {
+        health_fill_sprite_->draw(graphics, kHealthFillX, kHealthFillY);
+    }
+    three_->draw(graphics, units::tileToGame(2), units::tileToGame(2));
 }
 
 void Player::startMovingLeft() {
@@ -176,6 +197,25 @@ Rectangle Player::damageRectangle() const {
 }
 
 void Player::initializeSprites(Graphics& graphics) {
+    health_bar_sprite_ = std::make_unique<Sprite>(
+            graphics, "content/TextBox.bmp",
+            units::gameToPixel(kHealthBarSourceX),
+            units::gameToPixel(kHealthBarSourceY),
+            units::tileToPixel(kHealthBarSourceWidth),
+            units::gameToPixel(kHealthBarSourceHeight));
+    health_fill_sprite_ = std::make_unique<Sprite>(
+            graphics, "content/TextBox.bmp",
+            units::gameToPixel(kHealthFillSourceX),
+            units::gameToPixel(kHealthFillSourceY),
+            units::gameToPixel(5 * units::kHalfTile - 2.0f),
+            units::gameToPixel(kHealthFillSourceHeight));
+    three_ = std::make_unique<Sprite>(
+            graphics, "content/TextBox.bmp",
+            units::gameToPixel(3 * units::kHalfTile),
+            units::gameToPixel(7 * units::kHalfTile),
+            units::gameToPixel(units::kHalfTile),
+            units::gameToPixel(units::kHalfTile));
+
     for (MotionType motion_type : motion_types) {
         for (HorizontalFacing horizontal_facing : horizontal_facings) {
             for (VerticalFacing vertical_facing : vertical_facings) {
@@ -377,4 +417,8 @@ void Player::updateY(units::MS elapsed_time_ms, const Map& map) {
             on_ground_ = true;
         }
     }
+}
+
+bool Player::spriteIsVisible() const {
+    return !(invincible_ && (invincible_time_ / kInvincibleFlashTime) % 2 == 0);
 }

@@ -112,5 +112,6 @@ void Game::draw(Graphics& graphics) {
     bat_->draw(graphics);
     player_->draw(graphics);
     map_->draw(graphics);
+    player_->drawHUD(graphics);
     graphics.flip();
 }

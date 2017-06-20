@@ -16,8 +16,7 @@ struct FirstCaveBat {
     void draw(Graphics& graphics) const;
 
     Rectangle damageRectangle() const {
-        return Rectangle(x_ + units::tileToGame(1) / 2.0f,
-                         y_ + units::tileToGame(1) / 2.0f,
+        return Rectangle(x_ + units::kHalfTile, y_ + units::kHalfTile,
                          0, 0);
     }
 
