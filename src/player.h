@@ -7,6 +7,7 @@
 #include "sprite.h"
 #include "rectangle.h"
 #include "units.h"
+#include "number_sprite.h"
 
 struct Graphics;
 struct Map;
@@ -100,7 +101,7 @@ private:
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
     std::unique_ptr<Sprite> health_bar_sprite_;
     std::unique_ptr<Sprite> health_fill_sprite_;
-    std::unique_ptr<Sprite> three_;
+    std::unique_ptr<NumberSprite> health_number_sprite_;
 };
 
 #endif // PLAYER_H_

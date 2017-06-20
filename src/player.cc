@@ -6,6 +6,7 @@
 #include "rectangle.h"
 #include <cmath>
 #include <cassert>
+#include "number_sprite.h"
 
 namespace {
     // Walk motion
@@ -132,7 +133,7 @@ void Player::drawHUD(Graphics& graphics) const {
     if (spriteIsVisible()) {
         health_fill_sprite_->draw(graphics, kHealthFillX, kHealthFillY);
     }
-    three_->draw(graphics, units::tileToGame(2), units::tileToGame(2));
+    health_number_sprite_->draw(graphics, units::tileToGame(2), units::tileToGame(2));
 }
 
 void Player::startMovingLeft() {
@@ -209,12 +210,7 @@ void Player::initializeSprites(Graphics& graphics) {
             units::gameToPixel(kHealthFillSourceY),
             units::gameToPixel(5 * units::kHalfTile - 2.0f),
             units::gameToPixel(kHealthFillSourceHeight));
-    three_ = std::make_unique<Sprite>(
-            graphics, "content/TextBox.bmp",
-            units::gameToPixel(3 * units::kHalfTile),
-            units::gameToPixel(7 * units::kHalfTile),
-            units::gameToPixel(units::kHalfTile),
-            units::gameToPixel(units::kHalfTile));
+    health_number_sprite_ = std::make_unique<NumberSprite>(graphics, 3);
 
     for (MotionType motion_type : motion_types) {
         for (HorizontalFacing horizontal_facing : horizontal_facings) {
