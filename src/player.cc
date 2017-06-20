@@ -62,6 +62,10 @@ namespace {
     const units::Game kHealthFillSourceY = 3 * units::kHalfTile;
     const units::Game kHealthFillSourceHeight = units::kHalfTile;
 
+    const units::Game kHealthNumberX = 3 * units::kHalfTile;
+    const units::Game kHealthNumberY = units::tileToGame(2);
+    const int kHealthNumberNumDigits = 2;
+
     struct CollisionInfo {
         bool collided;
         units::Tile row, col;
@@ -133,7 +137,7 @@ void Player::drawHUD(Graphics& graphics) const {
     if (spriteIsVisible()) {
         health_fill_sprite_->draw(graphics, kHealthFillX, kHealthFillY);
     }
-    health_number_sprite_->draw(graphics, units::tileToGame(2), units::tileToGame(2));
+    health_number_sprite_->draw(graphics, kHealthNumberX, kHealthNumberY);
 }
 
 void Player::startMovingLeft() {
@@ -210,7 +214,7 @@ void Player::initializeSprites(Graphics& graphics) {
             units::gameToPixel(kHealthFillSourceY),
             units::gameToPixel(5 * units::kHalfTile - 2.0f),
             units::gameToPixel(kHealthFillSourceHeight));
-    health_number_sprite_ = std::make_unique<NumberSprite>(graphics, 3);
+    health_number_sprite_ = std::make_unique<NumberSprite>(graphics, 3, kHealthNumberNumDigits);
 
     for (MotionType motion_type : motion_types) {
         for (HorizontalFacing horizontal_facing : horizontal_facings) {
