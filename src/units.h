@@ -5,6 +5,8 @@
 
 namespace units {
 
+    typedef int HP;
+
     typedef float Game;
     typedef int Pixel;
     typedef unsigned int Tile;

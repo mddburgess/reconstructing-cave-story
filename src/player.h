@@ -8,6 +8,7 @@
 #include "rectangle.h"
 #include "units.h"
 #include "number_sprite.h"
+#include "varying_width_sprite.h"
 
 struct Graphics;
 struct Map;
@@ -17,7 +18,7 @@ struct Player {
 
     void update(units::MS elapsed_time_ms, const Map& map);
     void draw(Graphics& graphics);
-    void drawHUD(Graphics& graphics) const;
+    void drawHUD(Graphics& graphics);
 
     void startMovingLeft();
     void startMovingRight();
@@ -72,6 +73,23 @@ private:
     };
     friend bool operator<(const SpriteState& a, const SpriteState& b);
 
+    struct Health {
+        Health(Graphics& graphics);
+        void update(units::MS elapsed_time);
+        void draw(Graphics& graphics);
+        bool takeDamage(units::HP damage);
+    private:
+        units::Game fillOffset(units::HP health) const;
+
+        units::HP damage_;
+        units::MS damage_time_;
+        units::HP max_health_;
+        units::HP current_health_;
+        Sprite health_bar_sprite_;
+        VaryingWidthSprite health_fill_sprite_;
+        VaryingWidthSprite damage_fill_sprite_;
+    };
+
     void initializeSprites(Graphics& graphics);
     void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);
     SpriteState getSpriteState();
@@ -96,12 +114,10 @@ private:
     bool on_ground_;
     bool jump_active_;
     bool interacting_;
+    Health health_;
     bool invincible_;
     units::MS invincible_time_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
-    std::unique_ptr<Sprite> health_bar_sprite_;
-    std::unique_ptr<Sprite> health_fill_sprite_;
-    std::unique_ptr<NumberSprite> health_number_sprite_;
 };
 
 #endif // PLAYER_H_
