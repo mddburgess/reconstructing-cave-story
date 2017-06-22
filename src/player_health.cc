@@ -31,7 +31,7 @@ namespace {
 
 Player::Health::Health(Graphics& graphics) :
     damage_(0),
-    damage_time_(0),
+    damage_timer_(kDamageDelay),
     max_health_(6),
     current_health_(6),
     health_bar_sprite_(graphics, kSpritePath,
@@ -53,12 +53,9 @@ Player::Health::Health(Graphics& graphics) :
 }
 
 void Player::Health::update(units::MS elapsed_time) {
-    if (damage_ > 0) {
-        damage_time_ += elapsed_time;
-        if (damage_time_ > kDamageDelay) {
-            current_health_ -= damage_;
-            damage_ = 0;
-        }
+    if (damage_ > 0 && damage_timer_.expired()) {
+        current_health_ -= damage_;
+        damage_ = 0;
     }
 }
 
@@ -78,7 +75,7 @@ void Player::Health::draw(Graphics& graphics) {
 
 bool Player::Health::takeDamage(units::HP damage) {
     damage_ = damage;
-    damage_time_ = 0;
+    damage_timer_.reset();
     health_fill_sprite_.set_width(units::gameToPixel(fillOffset(current_health_ - damage)));
     damage_fill_sprite_.set_width(units::gameToPixel(fillOffset(damage)));
     return false;

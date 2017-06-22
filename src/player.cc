@@ -91,8 +91,7 @@ Player::Player(Graphics& graphics, units::Game x, units::Game y) :
     jump_active_(false),
     interacting_(false),
     health_(graphics),
-    invincible_(false),
-    invincible_time_(0)
+    invincible_timer_(kInvincibleTime)
 {
     initializeSprites(graphics);
 }
@@ -100,10 +99,6 @@ Player::Player(Graphics& graphics, units::Game x, units::Game y) :
 void Player::update(units::MS elapsed_time_ms, const Map& map) {
     sprites_[getSpriteState()]->update(elapsed_time_ms);
 
-    if (invincible_) {
-        invincible_time_ += elapsed_time_ms;
-        invincible_ = invincible_time_ < kInvincibleTime;
-    }
     health_.update(elapsed_time_ms);
 
     updateX(elapsed_time_ms, map);
@@ -168,13 +163,12 @@ void Player::stopJump() {
 }
 
 void Player::takeDamage() {
-    if (invincible_) {
+    if (invincible_timer_.active()) {
         return;
     }
     health_.takeDamage(2);
     velocity_y_ = std::min(velocity_y_, -kShortJumpSpeed);
-    invincible_ = true;
-    invincible_time_ = 0;
+    invincible_timer_.reset();
 }
 
 Rectangle Player::damageRectangle() const {
@@ -389,5 +383,6 @@ void Player::updateY(units::MS elapsed_time_ms, const Map& map) {
 }
 
 bool Player::spriteIsVisible() const {
-    return !(invincible_ && (invincible_time_ / kInvincibleFlashTime) % 2 == 0);
+    return !(invincible_timer_.active()
+              && (invincible_timer_.current_time() / kInvincibleFlashTime) % 2 == 0);
 }

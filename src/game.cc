@@ -5,6 +5,7 @@
 #include "input.h"
 #include "map.h"
 #include "first_cave_bat.h"
+#include "timer.h"
 
 namespace {
     const units::FPS kFps = 60;
@@ -98,6 +99,7 @@ void Game::eventLoop() {
 }
 
 void Game::update(units::MS elapsed_time_ms) {
+    Timer::updateAll(elapsed_time_ms);
     player_->update(elapsed_time_ms, *map_);
     bat_->update(elapsed_time_ms, player_->center_x());
 

@@ -9,6 +9,7 @@
 #include "units.h"
 #include "number_sprite.h"
 #include "varying_width_sprite.h"
+#include "timer.h"
 
 struct Graphics;
 struct Map;
@@ -82,7 +83,7 @@ private:
         units::Game fillOffset(units::HP health) const;
 
         units::HP damage_;
-        units::MS damage_time_;
+        Timer damage_timer_;
         units::HP max_health_;
         units::HP current_health_;
         Sprite health_bar_sprite_;
@@ -115,8 +116,7 @@ private:
     bool jump_active_;
     bool interacting_;
     Health health_;
-    bool invincible_;
-    units::MS invincible_time_;
+    Timer invincible_timer_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
 };
 
