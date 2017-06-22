@@ -100,6 +100,7 @@ void Player::update(units::MS elapsed_time_ms, const Map& map) {
     sprites_[getSpriteState()]->update(elapsed_time_ms);
 
     health_.update(elapsed_time_ms);
+    damage_text_.update(elapsed_time_ms);
 
     updateX(elapsed_time_ms, map);
     updateY(elapsed_time_ms, map);
@@ -115,6 +116,7 @@ void Player::drawHUD(Graphics& graphics) {
     if (spriteIsVisible()) {
         health_.draw(graphics);
     }
+    damage_text_.draw(graphics, center_x(), center_y());
 }
 
 void Player::startMovingLeft() {
@@ -162,11 +164,13 @@ void Player::stopJump() {
     jump_active_ = false;
 }
 
-void Player::takeDamage() {
+void Player::takeDamage(units::HP damage) {
     if (invincible_timer_.active()) {
         return;
     }
-    health_.takeDamage(2);
+    health_.takeDamage(damage);
+    damage_text_.setDamage(damage);
+
     velocity_y_ = std::min(velocity_y_, -kShortJumpSpeed);
     invincible_timer_.reset();
 }

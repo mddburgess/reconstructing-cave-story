@@ -20,6 +20,8 @@ struct FirstCaveBat {
                          0, 0);
     }
 
+    units::HP contactDamage() const;
+
 private:
     enum Facing {
         FIRST_FACING,

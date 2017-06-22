@@ -10,6 +10,7 @@ namespace {
     const units::AngularVelocity kAngularVelocity = 120.0f / 1000.0f;
 
     const units::Game kFlightAmplitude = 5 * units::kHalfTile;
+    const units::HP kContactDamage = 1;
 }
 
 FirstCaveBat::FirstCaveBat(Graphics& graphics, units::Game x, units::Game y)
@@ -34,6 +35,10 @@ void FirstCaveBat::update(units::MS elapsed_time, units::Game player_x) {
 
 void FirstCaveBat::draw(Graphics& graphics) const {
     sprites_.at(getSpriteState())->draw(graphics, x_, y_);
+}
+
+units::HP FirstCaveBat::contactDamage() const {
+    return kContactDamage;
 }
 
 void FirstCaveBat::initializeSprites(Graphics& graphics) {
