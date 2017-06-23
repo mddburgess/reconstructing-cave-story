@@ -91,7 +91,8 @@ Player::Player(Graphics& graphics, units::Game x, units::Game y) :
     jump_active_(false),
     interacting_(false),
     health_(graphics),
-    invincible_timer_(kInvincibleTime)
+    invincible_timer_(kInvincibleTime),
+    polar_star_(graphics)
 {
     initializeSprites(graphics);
 }
@@ -108,6 +109,7 @@ void Player::update(units::MS elapsed_time_ms, const Map& map) {
 
 void Player::draw(Graphics& graphics) {
     if (spriteIsVisible()) {
+        polar_star_.draw(graphics, horizontal_facing_, vertical_facing_, x_, y_);
         sprites_[getSpriteState()]->draw(graphics, x_, y_);
     }
 }
@@ -183,12 +185,17 @@ Rectangle Player::damageRectangle() const {
 }
 
 void Player::initializeSprites(Graphics& graphics) {
-    for (MotionType motion_type : motion_types) {
-        for (HorizontalFacing horizontal_facing : horizontal_facings) {
-            for (VerticalFacing vertical_facing : vertical_facings) {
-                initializeSprite(graphics, SpriteState(motion_type,
-                                                       horizontal_facing,
-                                                       vertical_facing));
+    for (int motion_type = FIRST_MOTION_TYPE;
+         motion_type < LAST_MOTION_TYPE; ++motion_type) {
+        for (int horizontal_facing = FIRST_HORIZONTAL_FACING;
+             horizontal_facing < LAST_HORIZONTAL_FACING; ++horizontal_facing) {
+            for (int vertical_facing = FIRST_VERTICAL_FACING;
+                 vertical_facing < LAST_VERTICAL_FACING; ++vertical_facing) {
+                initializeSprite(graphics, SpriteState(
+                        MotionType(motion_type),
+                        HorizontalFacing(horizontal_facing),
+                        VerticalFacing(vertical_facing)));
+
             }
         }
     }
@@ -216,6 +223,8 @@ void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_stat
             break;
         case FALLING:
             tile_x = kFallFrame;
+            break;
+        case LAST_MOTION_TYPE:
             break;
     }
     tile_x = sprite_state.vertical_facing == UP

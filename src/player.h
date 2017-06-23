@@ -3,7 +3,6 @@
 
 #include <memory>
 #include <map>
-#include <array>
 #include "sprite.h"
 #include "rectangle.h"
 #include "units.h"
@@ -11,6 +10,8 @@
 #include "varying_width_sprite.h"
 #include "timer.h"
 #include "damage_text.h"
+#include "polar_star.h"
+#include "sprite_state.h"
 
 struct Graphics;
 struct Map;
@@ -41,26 +42,14 @@ struct Player {
 
 private:
     enum MotionType {
-        STANDING,
+        FIRST_MOTION_TYPE,
+        STANDING = FIRST_MOTION_TYPE,
         INTERACTING,
         WALKING,
         JUMPING,
-        FALLING
+        FALLING,
+        LAST_MOTION_TYPE
     };
-    std::array<MotionType,5> motion_types = {STANDING, INTERACTING, WALKING, JUMPING, FALLING};
-
-    enum HorizontalFacing {
-        LEFT,
-        RIGHT
-    };
-    std::array<HorizontalFacing,2> horizontal_facings = {LEFT, RIGHT};
-
-    enum VerticalFacing {
-        UP,
-        DOWN,
-        HORIZONTAL
-    };
-    std::array<VerticalFacing,3> vertical_facings = {UP, DOWN, HORIZONTAL};
 
     struct SpriteState {
         SpriteState(MotionType motion_type = STANDING,
@@ -120,6 +109,7 @@ private:
     Health health_;
     Timer invincible_timer_;
     DamageText damage_text_;
+    PolarStar polar_star_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
 };
 
