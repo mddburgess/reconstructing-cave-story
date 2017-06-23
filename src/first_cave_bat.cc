@@ -42,13 +42,13 @@ units::HP FirstCaveBat::contactDamage() const {
 }
 
 void FirstCaveBat::initializeSprites(Graphics& graphics) {
-    for (int facing = FIRST_FACING; facing < LAST_FACING; ++facing) {
-        initializeSprite(graphics, SpriteState(Facing(facing)));
+    ENUM_FOREACH(facing, HORIZONTAL_FACING) {
+        initializeSprite(graphics, std::make_tuple(HorizontalFacing(facing)));
     }
 }
 
 void FirstCaveBat::initializeSprite(Graphics& graphics, const SpriteState& sprite_state) {
-    units::Tile tile_y = sprite_state.facing == RIGHT ? 3 : 2;
+    units::Tile tile_y = sprite_state.horizontal_facing() == RIGHT ? 3 : 2;
     sprites_[sprite_state] = std::make_shared<AnimatedSprite>(
             graphics, "content/NpcCemet.bmp",
             units::tileToPixel(2), units::tileToPixel(tile_y),

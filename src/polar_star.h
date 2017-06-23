@@ -1,8 +1,6 @@
 #ifndef POLAR_STAR_H_
 #define POLAR_STAR_H_
 
-#include <map>
-#include <memory>
 #include "sprite_state.h"
 #include "units.h"
 
@@ -18,20 +16,12 @@ struct PolarStar {
               units::Game x, units::Game y);
 
 private:
-    struct SpriteState {
-        SpriteState(HorizontalFacing horizontal_facing, VerticalFacing vertical_facing) :
-            horizontal_facing(horizontal_facing),
-            vertical_facing(vertical_facing) {}
-
-        HorizontalFacing horizontal_facing;
-        VerticalFacing vertical_facing;
+    typedef std::tuple<HorizontalFacing, VerticalFacing> SpriteTuple;
+    struct SpriteState : public SpriteTuple {
+        SpriteState(const SpriteTuple& tuple) : SpriteTuple(tuple) {}
+        HorizontalFacing horizontal_facing() const { return std::get<0>(*this); }
+        VerticalFacing vertical_facing() const { return std::get<1>(*this); }
     };
-    friend bool operator<(const SpriteState& a, const SpriteState& b) {
-        if (a.horizontal_facing != b.horizontal_facing) {
-            return a.horizontal_facing < b.horizontal_facing;
-        }
-        return a.vertical_facing < b.vertical_facing;
-    }
 
     void initializeSprites(Graphics& graphics);
     void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);

@@ -1,17 +1,15 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include <memory>
-#include <map>
-#include "sprite.h"
-#include "rectangle.h"
-#include "units.h"
-#include "number_sprite.h"
-#include "varying_width_sprite.h"
-#include "timer.h"
 #include "damage_text.h"
+#include "number_sprite.h"
 #include "polar_star.h"
+#include "sprite.h"
 #include "sprite_state.h"
+#include "rectangle.h"
+#include "timer.h"
+#include "units.h"
+#include "varying_width_sprite.h"
 
 struct Graphics;
 struct Map;
@@ -51,19 +49,14 @@ private:
         LAST_MOTION_TYPE
     };
 
-    struct SpriteState {
-        SpriteState(MotionType motion_type = STANDING,
-                    HorizontalFacing horizontal_facing = LEFT,
-                    VerticalFacing vertical_facing = HORIZONTAL) :
-            motion_type(motion_type),
-            horizontal_facing(horizontal_facing),
-            vertical_facing(vertical_facing) {}
+    typedef std::tuple<MotionType, HorizontalFacing, VerticalFacing> SpriteTuple;
+    struct SpriteState : public SpriteTuple {
+        SpriteState(const SpriteTuple& tuple) : SpriteTuple(tuple) {}
 
-        MotionType motion_type;
-        HorizontalFacing horizontal_facing;
-        VerticalFacing  vertical_facing;
+        MotionType motion_type() const { return std::get<0>(*this); }
+        HorizontalFacing horizontal_facing() const { return std::get<1>(*this); }
+        VerticalFacing  vertical_facing() const { return std::get<2>(*this); }
     };
-    friend bool operator<(const SpriteState& a, const SpriteState& b);
 
     struct Health {
         Health(Graphics& graphics);
