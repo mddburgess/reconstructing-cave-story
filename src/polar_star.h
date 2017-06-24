@@ -10,6 +10,8 @@ struct Sprite;
 struct PolarStar {
     PolarStar(Graphics& graphics);
 
+    void updateProjectiles(units::MS elapsed_time);
+
     void draw(Graphics& graphics,
               HorizontalFacing horizontal_facing,
               VerticalFacing vertical_facing,
@@ -40,6 +42,8 @@ private:
                    units::Game x,
                    units::Game y);
 
+
+        bool update(units::MS elapsed_time);
         void draw(Graphics& graphics);
 
     private:
@@ -64,7 +68,8 @@ private:
     std::shared_ptr<Sprite> horizontal_projectile_;
     std::shared_ptr<Sprite> vertical_projectile_;
 
-    std::shared_ptr<Projectile> projectile_;
+    std::shared_ptr<Projectile> projectile_a_;
+    std::shared_ptr<Projectile> projectile_b_;
 };
 
 #endif // POLAR_STAR_H_

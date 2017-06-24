@@ -33,10 +33,27 @@ namespace {
     const units::Tile kProjectileSourceY = 2;
     const units::Tile kHorizontalProjectileSourceX = 8;
     const units::Tile kVerticalProjectileSourceX = 9;
+
+    // Projectile velocity
+    const units::Velocity kProjectileSpeed = 0.6f;
+    const units::Game kProjectileMaxOffset = 7 * units::kHalfTile;
 }
 
 PolarStar::PolarStar(Graphics& graphics) {
     initializeSprites(graphics);
+}
+
+void PolarStar::updateProjectiles(units::MS elapsed_time) {
+    if (projectile_a_) {
+        if (!projectile_a_->update(elapsed_time)) {
+            projectile_a_.reset();
+        }
+    }
+    if (projectile_b_) {
+        if (!projectile_b_->update(elapsed_time)) {
+            projectile_b_.reset();
+        }
+    }
 }
 
 void PolarStar::draw(Graphics& graphics,
@@ -49,8 +66,11 @@ void PolarStar::draw(Graphics& graphics,
     units::Game x = gun_x(horizontal_facing, player_x);
     units::Game y = gun_y(vertical_facing, gun_up, player_y);
     sprite_map_[std::make_tuple(horizontal_facing, vertical_facing)]->draw(graphics, x, y);
-    if (projectile_) {
-        projectile_->draw(graphics);
+    if (projectile_a_) {
+        projectile_a_->draw(graphics);
+    }
+    if (projectile_b_) {
+        projectile_b_->draw(graphics);
     }
 }
 
@@ -76,6 +96,10 @@ void PolarStar::startFire(units::Game player_x,
                           VerticalFacing vertical_facing,
                           bool gun_up) {
 
+    if (projectile_a_ && projectile_b_) {
+        return;
+    }
+
     units::Game bullet_x = gun_x(horizontal_facing, player_x) - units::kHalfTile;
     units::Game bullet_y = gun_y(vertical_facing, gun_up, player_y) + - units::kHalfTile;
     switch (vertical_facing) {
@@ -100,13 +124,25 @@ void PolarStar::startFire(units::Game player_x,
         default:
             break;
     }
-    projectile_ = std::make_shared<Projectile>(
-         vertical_facing == HORIZONTAL ? horizontal_projectile_ : vertical_projectile_,
-         horizontal_facing,
-         vertical_facing,
-         bullet_x,
-         bullet_y
-    );
+    if (!projectile_a_) {
+        projectile_a_ = std::make_shared<Projectile>(
+                vertical_facing == HORIZONTAL ? horizontal_projectile_
+                                              : vertical_projectile_,
+                horizontal_facing,
+                vertical_facing,
+                bullet_x,
+                bullet_y
+        );
+    } else if (!projectile_b_) {
+        projectile_b_ = std::make_shared<Projectile>(
+                vertical_facing == HORIZONTAL ? horizontal_projectile_
+                                              : vertical_projectile_,
+                horizontal_facing,
+                vertical_facing,
+                bullet_x,
+                bullet_y
+        );
+    }
 }
 
 void PolarStar::initializeSprites(Graphics& graphics) {
@@ -168,6 +204,27 @@ PolarStar::Projectile::Projectile(std::shared_ptr <Sprite> sprite,
 {
 }
 
+bool PolarStar::Projectile::update(units::MS elapsed_time) {
+    offset_ += kProjectileSpeed * elapsed_time;
+    return offset_ < kProjectileMaxOffset;
+}
+
 void PolarStar::Projectile::draw(Graphics& graphics) {
-    sprite_->draw(graphics, x_, y_);
+    units::Game x = x_;
+    units::Game y = y_;
+
+    switch (vertical_direction_) {
+        case HORIZONTAL:
+            x += horizontal_direction_ == LEFT ? -offset_ : offset_;
+            break;
+        case UP:
+            y -= offset_;
+            break;
+        case DOWN:
+            y += offset_;
+            break;
+        default:
+            break;
+    }
+    sprite_->draw(graphics, x, y);
 }
