@@ -87,7 +87,7 @@ void Player::update(units::MS elapsed_time_ms, const Map& map) {
     damage_text_.update(elapsed_time_ms);
 
     walking_animation_.update();
-    polar_star_.updateProjectiles(elapsed_time_ms);
+    polar_star_.updateProjectiles(elapsed_time_ms, map);
 
     updateX(elapsed_time_ms, map);
     updateY(elapsed_time_ms, map);

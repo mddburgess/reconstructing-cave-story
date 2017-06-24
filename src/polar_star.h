@@ -1,16 +1,18 @@
 #ifndef POLAR_STAR_H_
 #define POLAR_STAR_H_
 
+#include "rectangle.h"
 #include "sprite_state.h"
 #include "units.h"
 
 struct Graphics;
+struct Map;
 struct Sprite;
 
 struct PolarStar {
     PolarStar(Graphics& graphics);
 
-    void updateProjectiles(units::MS elapsed_time);
+    void updateProjectiles(units::MS elapsed_time, const Map& map);
 
     void draw(Graphics& graphics,
               HorizontalFacing horizontal_facing,
@@ -43,10 +45,14 @@ private:
                    units::Game y);
 
 
-        bool update(units::MS elapsed_time);
+        bool update(units::MS elapsed_time, const Map& map);
         void draw(Graphics& graphics);
 
     private:
+        Rectangle collisionRectangle() const;
+        units::Game getX() const;
+        units::Game getY() const;
+
         std::shared_ptr<Sprite> sprite_;
         const HorizontalFacing horizontal_direction_;
         const VerticalFacing vertical_direction_;
