@@ -29,6 +29,9 @@ struct Player {
     void lookDown();
     void lookHorizontal();
 
+    void startFire();
+    void stopFire();
+
     void startJump();
     void stopJump();
 
@@ -109,6 +112,10 @@ private:
 
     MotionType motionType() const;
     bool onGround() const { return on_ground_; }
+    bool gun_up() const {
+        return motionType() == WALKING
+               && walking_animation_.stride() != STRIDE_MIDDLE;
+    }
     VerticalFacing vertical_facing() const {
         return onGround() && intended_vertical_facing_ == DOWN
             ? HORIZONTAL

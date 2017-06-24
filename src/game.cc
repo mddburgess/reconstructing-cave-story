@@ -77,6 +77,13 @@ void Game::eventLoop() {
             player_->lookDown();
         }
 
+        // Player fire
+        if (input.wasKeyPressed(SDLK_x)) {
+            player_->startFire();
+        } else if (input.wasKeyReleased(SDLK_x)) {
+            player_->stopFire();
+        }
+
         // Player jump
         if (input.wasKeyPressed(SDLK_z)) {
             player_->startJump();

@@ -94,9 +94,7 @@ void Player::update(units::MS elapsed_time_ms, const Map& map) {
 
 void Player::draw(Graphics& graphics) {
     if (spriteIsVisible()) {
-        const bool gun_up = motionType() == WALKING
-                            && walking_animation_.stride() != STRIDE_MIDDLE;
-        polar_star_.draw(graphics, horizontal_facing_, vertical_facing(), gun_up, x_, y_);
+        polar_star_.draw(graphics, horizontal_facing_, vertical_facing(), gun_up(), x_, y_);
         sprites_[getSpriteState()]->draw(graphics, x_, y_);
     }
 }
@@ -145,6 +143,14 @@ void Player::lookDown() {
 
 void Player::lookHorizontal() {
     intended_vertical_facing_ = HORIZONTAL;
+}
+
+void Player::startFire() {
+    polar_star_.startFire(x_, y_, horizontal_facing_, vertical_facing(), gun_up());
+}
+
+void Player::stopFire() {
+    polar_star_.stopFire();
 }
 
 void Player::startJump() {
