@@ -37,10 +37,6 @@ namespace {
     const units::Frame kDownFrame = 6;
     const units::Frame kBackFrame = 7;
 
-    // Walk animation
-    const units::Frame kNumWalkFrames = 3;
-    const units::FPS kWalkFps = 15;
-
     // Collision rectangle
     const Rectangle kCollisionX(6, 10, 20, 12);
     const Rectangle kCollisionY(10, 2, 12, 30);
@@ -90,13 +86,17 @@ void Player::update(units::MS elapsed_time_ms, const Map& map) {
     health_.update(elapsed_time_ms);
     damage_text_.update(elapsed_time_ms);
 
+    walking_animation_.update();
+
     updateX(elapsed_time_ms, map);
     updateY(elapsed_time_ms, map);
 }
 
 void Player::draw(Graphics& graphics) {
     if (spriteIsVisible()) {
-        polar_star_.draw(graphics, horizontal_facing_, vertical_facing_, x_, y_);
+        const bool gun_up = motionType() == WALKING
+                            && walking_animation_.stride() != STRIDE_MIDDLE;
+        polar_star_.draw(graphics, horizontal_facing_, vertical_facing_, gun_up, x_, y_);
         sprites_[getSpriteState()]->draw(graphics, x_, y_);
     }
 }
@@ -109,12 +109,18 @@ void Player::drawHUD(Graphics& graphics) {
 }
 
 void Player::startMovingLeft() {
+    if (onGround() && acceleration_x_ == 0) {
+        walking_animation_.reset();
+    }
     acceleration_x_ = -1;
     horizontal_facing_ = LEFT;
     interacting_ = false;
 }
 
 void Player::startMovingRight() {
+    if (onGround() && acceleration_x_ == 0) {
+        walking_animation_.reset();
+    }
     acceleration_x_ = 1;
     horizontal_facing_ = RIGHT;
     interacting_ = false;
@@ -175,10 +181,13 @@ void Player::initializeSprites(Graphics& graphics) {
     ENUM_FOREACH(motion_type, MOTION_TYPE) {
         ENUM_FOREACH(horizontal_facing, HORIZONTAL_FACING) {
             ENUM_FOREACH(vertical_facing, VERTICAL_FACING) {
-                initializeSprite(graphics, std::make_tuple(
-                        MotionType(motion_type),
-                        HorizontalFacing(horizontal_facing),
-                        VerticalFacing(vertical_facing)));
+                ENUM_FOREACH(stride_type, STRIDE_TYPE) {
+                    initializeSprite(graphics, std::make_tuple(
+                            MotionType(motion_type),
+                            HorizontalFacing(horizontal_facing),
+                            VerticalFacing(vertical_facing),
+                            StrideType(stride_type)));
+                }
             }
         }
     }
@@ -215,11 +224,22 @@ void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_stat
             : tile_x;
 
     if (sprite_state.motion_type() == WALKING) {
-        sprites_[sprite_state] = std::make_shared<AnimatedSprite>(
+        switch (sprite_state.stride_type()) {
+            case STRIDE_MIDDLE:
+                break;
+            case STRIDE_LEFT:
+                tile_x += 1;
+                break;
+            case STRIDE_RIGHT:
+                tile_x += 2;
+                break;
+            default:
+                break;
+        }
+        sprites_[sprite_state] = std::make_shared<Sprite>(
                 graphics, kSpriteFilePath,
                 units::tileToPixel(tile_x), units::tileToPixel(tile_y),
-                units::tileToPixel(1), units::tileToPixel(1),
-                kWalkFps, kNumWalkFrames);
+                units::tileToPixel(1), units::tileToPixel(1));
     } else {
         if (sprite_state.vertical_facing() == DOWN
                 && (sprite_state.motion_type() == JUMPING
@@ -233,7 +253,7 @@ void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_stat
     }
 }
 
-Player::SpriteState Player::getSpriteState() {
+Player::MotionType Player::motionType() const {
     MotionType motion;
     if (interacting_) {
         motion = INTERACTING;
@@ -242,7 +262,14 @@ Player::SpriteState Player::getSpriteState() {
     } else {
         motion = velocity_y_ < 0.0f ? JUMPING : FALLING;
     }
-    return std::make_tuple(motion, horizontal_facing_, vertical_facing_);
+    return motion;
+}
+
+Player::SpriteState Player::getSpriteState() {
+    return std::make_tuple(motionType(),
+                           horizontal_facing_,
+                           vertical_facing_,
+                           walking_animation_.stride());
 }
 
 Rectangle Player::leftCollision(units::Game delta) const {

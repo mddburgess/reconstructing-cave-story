@@ -13,7 +13,7 @@ struct PolarStar {
     void draw(Graphics& graphics,
               HorizontalFacing horizontal_facing,
               VerticalFacing vertical_facing,
-              units::Game x, units::Game y);
+              bool gun_up, units::Game x, units::Game y);
 
 private:
     typedef std::tuple<HorizontalFacing, VerticalFacing> SpriteTuple;

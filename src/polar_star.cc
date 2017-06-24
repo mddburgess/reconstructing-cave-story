@@ -24,7 +24,7 @@ PolarStar::PolarStar(Graphics& graphics) {
 void PolarStar::draw(Graphics& graphics,
                      HorizontalFacing horizontal_facing,
                      VerticalFacing vertical_facing,
-                     units::Game x, units::Game y) {
+                     bool gun_up, units::Game x, units::Game y) {
     if (horizontal_facing == LEFT) {
         x -= units::kHalfTile;
     }
@@ -32,6 +32,9 @@ void PolarStar::draw(Graphics& graphics,
         y -= units::kHalfTile / 2;
     } else if (vertical_facing == DOWN) {
         y += units::kHalfTile / 2;
+    }
+    if (gun_up) {
+        y -= 2.0f;
     }
     sprite_map_[std::make_tuple(horizontal_facing, vertical_facing)]->draw(graphics, x, y);
 }

@@ -48,14 +48,34 @@ private:
         FALLING,
         LAST_MOTION_TYPE
     };
+    enum StrideType {
+        FIRST_STRIDE_TYPE,
+        STRIDE_MIDDLE = FIRST_STRIDE_TYPE,
+        STRIDE_LEFT,
+        STRIDE_RIGHT,
+        LAST_STRIDE_TYPE
+    };
 
-    typedef std::tuple<MotionType, HorizontalFacing, VerticalFacing> SpriteTuple;
+    typedef std::tuple<MotionType, HorizontalFacing, VerticalFacing, StrideType> SpriteTuple;
     struct SpriteState : public SpriteTuple {
         SpriteState(const SpriteTuple& tuple) : SpriteTuple(tuple) {}
 
         MotionType motion_type() const { return std::get<0>(*this); }
         HorizontalFacing horizontal_facing() const { return std::get<1>(*this); }
         VerticalFacing  vertical_facing() const { return std::get<2>(*this); }
+        StrideType stride_type() const { return std::get<3>(*this); }
+    };
+
+    struct WalkingAnimation {
+        WalkingAnimation();
+        void update();
+        void reset();
+        StrideType stride() const;
+
+    private:
+        Timer frame_timer_;
+        units::Frame current_frame_;
+        bool forward_;
     };
 
     struct Health {
@@ -87,6 +107,7 @@ private:
     void updateX(units::MS elapsed_time_ms, const Map& map);
     void updateY(units::MS elapsed_time_ms, const Map& map);
 
+    MotionType motionType() const;
     bool onGround() const { return on_ground_; }
 
     bool spriteIsVisible() const;
@@ -102,6 +123,7 @@ private:
     Health health_;
     Timer invincible_timer_;
     DamageText damage_text_;
+    WalkingAnimation walking_animation_;
     PolarStar polar_star_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
 };
