@@ -109,6 +109,11 @@ private:
 
     MotionType motionType() const;
     bool onGround() const { return on_ground_; }
+    VerticalFacing vertical_facing() const {
+        return onGround() && intended_vertical_facing_ == DOWN
+            ? HORIZONTAL
+            : intended_vertical_facing_;
+    }
 
     bool spriteIsVisible() const;
 
@@ -116,7 +121,7 @@ private:
     units::Velocity velocity_x_, velocity_y_;
     int acceleration_x_;
     HorizontalFacing horizontal_facing_;
-    VerticalFacing  vertical_facing_;
+    VerticalFacing  intended_vertical_facing_;
     bool on_ground_;
     bool jump_active_;
     bool interacting_;
