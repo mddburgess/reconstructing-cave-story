@@ -7,7 +7,7 @@ namespace {
     const int kPolarStarIndex = 2;
     const units::Game kGunWidth = 3 * units::kHalfTile;
     const units::Game kGunHeight = 2 * units::kHalfTile;
-    const std::string kSpritePath("content/Arms.bmp");
+    const std::string kSpritePath("Arms");
 
     const units::Tile kHorizontalOffset = 0;
     const units::Tile kUpOffset = 2;

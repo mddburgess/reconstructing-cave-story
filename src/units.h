@@ -2,6 +2,7 @@
 #define UNITS_H_
 
 #include <cmath>
+#include "config.h"
 
 namespace units {
 
@@ -26,7 +27,9 @@ namespace units {
     }
 
     inline Pixel gameToPixel(Game game) {
-        return Pixel(round(game / 2));
+        return config::getGraphicsQuality() == config::HIGH_QUALITY
+            ? Pixel(round(game))
+            : Pixel(round(game) / 2);
     }
 
     inline Tile gameToTile(Game game) {

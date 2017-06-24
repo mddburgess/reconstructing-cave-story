@@ -23,8 +23,12 @@ Graphics::~Graphics() {
     SDL_DestroyWindow(window_);
 }
 
-Graphics::TextureID Graphics::loadImage(const std::string& file_path,
+Graphics::TextureID Graphics::loadImage(const std::string& file_name,
                                         bool black_is_transparent) {
+    const std::string file_path = config::getGraphicsQuality() == config::ORIGINAL_QUALITY
+        ? "content/original_graphics/" + file_name + ".pbm"
+        : "content/" + file_name + ".bmp";
+
     if (sprite_sheets_.count(file_path) == 0) {
         SDL_Surface* surface = SDL_LoadBMP(file_path.c_str());
         if (black_is_transparent) {

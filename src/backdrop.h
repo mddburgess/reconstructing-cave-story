@@ -9,7 +9,7 @@ struct Backdrop {
 };
 
 struct FixedBackdrop : public Backdrop {
-    FixedBackdrop(const std::string& path, Graphics& graphics);
+    FixedBackdrop(const std::string& file_name, Graphics& graphics);
     void draw(Graphics& graphics) const;
 
 private:

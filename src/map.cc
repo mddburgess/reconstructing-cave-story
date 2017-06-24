@@ -10,7 +10,7 @@
 Map* Map::createTestMap(Graphics& graphics) {
     Map* map = new Map();
 
-    map->backdrop_ = std::make_unique<FixedBackdrop>("content/bkBlue.bmp", graphics);
+    map->backdrop_ = std::make_unique<FixedBackdrop>("bkBlue", graphics);
     const units::Tile num_rows = 15;
     const units::Tile num_cols = 20;
     map->tiles_ = std::vector<std::vector<Tile>>(
@@ -25,7 +25,7 @@ Map* Map::createTestMap(Graphics& graphics) {
     );
 
     std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(
-            graphics, "content/PrtCave.bmp",
+            graphics, "PrtCave",
             units::tileToPixel(1), 0,
             units::tileToPixel(1), units::tileToPixel(1));
     Tile tile(WALL_TILE, sprite);
@@ -40,15 +40,15 @@ Map* Map::createTestMap(Graphics& graphics) {
     map->tiles_[10][3] = tile;
 
     std::shared_ptr<Sprite> chain_top = std::make_shared<Sprite>(
-            graphics, "content/PrtCave.bmp",
+            graphics, "PrtCave",
             units::tileToPixel(11), units::tileToPixel(2),
             units::tileToPixel(1), units::tileToPixel(1));
     std::shared_ptr<Sprite> chain_middle = std::make_shared<Sprite>(
-            graphics, "content/PrtCave.bmp",
+            graphics, "PrtCave",
             units::tileToPixel(12), units::tileToPixel(2),
             units::tileToPixel(1), units::tileToPixel(1));
     std::shared_ptr<Sprite> chain_bottom = std::make_shared<Sprite>(
-            graphics, "content/PrtCave.bmp",
+            graphics, "PrtCave",
             units::tileToPixel(13), units::tileToPixel(2),
             units::tileToPixel(1), units::tileToPixel(1));
     map->background_tiles_[8][2] = chain_top;
