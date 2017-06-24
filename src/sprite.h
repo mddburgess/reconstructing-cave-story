@@ -13,7 +13,7 @@ struct Sprite {
            units::Pixel source_x, units::Pixel source_y,
            units::Pixel width, units::Pixel height);
 
-    virtual void update(units::MS) {}
+    virtual void update() {}
     void draw(Graphics& graphics, units::Game x, units::Game y);
 
 protected:

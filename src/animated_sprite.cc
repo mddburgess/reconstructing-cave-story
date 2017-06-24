@@ -13,7 +13,7 @@ AnimatedSprite::AnimatedSprite(Graphics& graphics,
 {
 }
 
-void AnimatedSprite::update(units::MS elapsed_time_ms) {
+void AnimatedSprite::update() {
     if (frame_timer_.expired()) {
         ++current_frame_;
         frame_timer_.reset();
