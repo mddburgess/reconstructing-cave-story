@@ -27,6 +27,8 @@ private:
     void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);
 
     std::map<SpriteState, std::shared_ptr<Sprite>> sprite_map_;
+    std::shared_ptr<Sprite> horizontal_projectile_;
+    std::shared_ptr<Sprite> vertical_projectile_;
 };
 
 #endif // POLAR_STAR_H_
