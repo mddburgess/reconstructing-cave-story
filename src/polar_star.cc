@@ -4,6 +4,7 @@
 #include "map.h"
 #include "particle_system.h"
 #include "projectile_star_particle.h"
+#include "projectile_wall_particle.h"
 #include "sprite.h"
 
 namespace {
@@ -236,6 +237,32 @@ bool PolarStar::Projectile::update(units::MS elapsed_time,
             map.getCollidingTiles(collisionRectangle()));
     for (Map::CollisionTile tile : colliding_tiles) {
         if (tile.tile_type == Map::WALL_TILE) {
+            const Rectangle tile_rectangle(units::tileToGame(tile.col),
+                                           units::tileToGame(tile.row),
+                                           units::tileToGame(1),
+                                           units::tileToGame(1));
+
+            units::Game particle_x, particle_y;
+            if (vertical_direction_ == HORIZONTAL) {
+                if (horizontal_direction_ == LEFT) {
+                    particle_x = tile_rectangle.right();
+                } else {
+                    particle_x = tile_rectangle.left();
+                }
+                particle_x -= units::kHalfTile;
+                particle_y = getY();
+            } else {
+                if (vertical_direction_ == UP) {
+                    particle_y = tile_rectangle.bottom();
+                } else {
+                    particle_y = tile_rectangle.top();
+                }
+                particle_x = getX();
+                particle_y -= units::kHalfTile;
+            }
+            particle_tools.system.addNewParticle(
+                    std::make_shared<ProjectileWallParticle>(
+                            particle_tools.graphics, particle_x, particle_y));
             return false;
         }
     }
