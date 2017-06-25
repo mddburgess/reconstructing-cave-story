@@ -41,6 +41,9 @@ void Game::eventLoop() {
     damage_texts_.addDamageable(bat_);
 
     map_.reset(Map::createTestMap(graphics));
+    particle_ = std::make_unique<HeadBumpParticle>(graphics,
+            units::tileToGame(kScreenWidth) / 2,
+            units::tileToGame(kScreenHeight) / 2);
 
     bool running = true;
     units::MS last_update_time = SDL_GetTicks();
@@ -112,6 +115,7 @@ void Game::eventLoop() {
 void Game::update(units::MS elapsed_time_ms) {
     Timer::updateAll(elapsed_time_ms);
     damage_texts_.update(elapsed_time_ms);
+    particle_->update(elapsed_time_ms);
     player_->update(elapsed_time_ms, *map_);
     if (bat_) {
         if (!bat_->update(elapsed_time_ms, player_->center_x())) {
@@ -140,5 +144,6 @@ void Game::draw(Graphics& graphics) {
     map_->draw(graphics);
     damage_texts_.draw(graphics);
     player_->drawHUD(graphics);
+    particle_->draw(graphics);
     graphics.flip();
 }

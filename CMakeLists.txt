@@ -48,7 +48,7 @@ set(SOURCE_FILES
         src/timer.cc
         src/timer.h
         src/units.h
-        src/varying_width_sprite.h)
+        src/varying_width_sprite.h src/head_bump_particle.h src/head_bump_particle.cc)
 
 add_executable(cavestory ${SOURCE_FILES})
 target_link_libraries(cavestory ${Boost_LIBRARIES})

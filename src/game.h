@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "damage_texts.h"
+#include "head_bump_particle.h"
 #include "units.h"
 
 struct Player;
@@ -25,7 +26,9 @@ private:
     std::shared_ptr<Player> player_;
     std::shared_ptr<FirstCaveBat> bat_;
     std::unique_ptr<Map> map_;
+    std::unique_ptr<HeadBumpParticle> particle_;
     DamageTexts damage_texts_;
+
 };
 
 #endif // GAME_H_
