@@ -47,6 +47,8 @@ set(SOURCE_FILES
         src/polar_star.h
         src/polar_vector.h
         src/projectile.h
+        src/projectile_star_particle.cc
+        src/projectile_star_particle.h
         src/rectangle.h
         src/sprite.cc
         src/sprite.h

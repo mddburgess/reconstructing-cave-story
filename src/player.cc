@@ -98,7 +98,7 @@ void Player::update(units::MS elapsed_time_ms,
     health_.update(elapsed_time_ms);
 
     walking_animation_.update();
-    polar_star_.updateProjectiles(elapsed_time_ms, map);
+    polar_star_.updateProjectiles(elapsed_time_ms, map, particle_tools);
 
     updateX(elapsed_time_ms, map);
     updateY(elapsed_time_ms, map, particle_tools);
@@ -156,8 +156,13 @@ void Player::lookHorizontal() {
     intended_vertical_facing_ = HORIZONTAL;
 }
 
-void Player::startFire() {
-    polar_star_.startFire(x_, y_, horizontal_facing_, vertical_facing(), gun_up());
+void Player::startFire(ParticleTools& particle_tools) {
+    polar_star_.startFire(x_,
+                          y_,
+                          horizontal_facing_,
+                          vertical_facing(),
+                          gun_up(),
+                          particle_tools);
 }
 
 void Player::stopFire() {

@@ -86,7 +86,8 @@ void Game::eventLoop() {
 
         // Player fire
         if (input.wasKeyPressed(SDLK_x)) {
-            player_->startFire();
+            ParticleTools particle_tools = { particle_system_, graphics };
+            player_->startFire(particle_tools);
         } else if (input.wasKeyReleased(SDLK_x)) {
             player_->stopFire();
         }

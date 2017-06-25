@@ -8,12 +8,14 @@
 
 struct Graphics;
 struct Map;
+struct ParticleTools;
 struct Sprite;
 
 struct PolarStar {
     PolarStar(Graphics& graphics);
 
-    void updateProjectiles(units::MS elapsed_time, const Map& map);
+    void updateProjectiles(units::MS elapsed_time, const Map& map,
+                               ParticleTools& particle_tools);
 
     void draw(Graphics& graphics,
               HorizontalFacing horizontal_facing,
@@ -26,7 +28,8 @@ struct PolarStar {
                    units::Game player_y,
                    HorizontalFacing horizontal_facing,
                    VerticalFacing vertical_facing,
-                   bool gun_up);
+                   bool gun_up,
+                   ParticleTools& particle_tools);
 
     void stopFire() {}
 
@@ -45,10 +48,14 @@ private:
                    HorizontalFacing horizontal_direction,
                    VerticalFacing vertical_direction,
                    units::Game x,
-                   units::Game y);
+                   units::Game y,
+                   ParticleTools& particle_tools);
 
 
-        bool update(units::MS elapsed_time, const Map& map);
+        bool update(units::MS elapsed_time,
+                    const Map& map,
+                    ParticleTools& particle_tools);
+
         void draw(Graphics& graphics);
         Rectangle collisionRectangle() const;
         units::HP contactDamage() const { return 1; }
