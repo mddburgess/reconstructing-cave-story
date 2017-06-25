@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include <cstdlib>
+#include <ctime>
 #include <SDL2/SDL.h>
 #include "first_cave_bat.h"
 #include "graphics.h"
@@ -17,6 +19,7 @@ units::Tile Game::kScreenWidth = 20;
 units::Tile Game::kScreenHeight = 15;
 
 Game::Game() {
+    srand(static_cast<unsigned int>(time(NULL)));
     SDL_Init(SDL_INIT_EVERYTHING);
     eventLoop();
 }
@@ -142,8 +145,8 @@ void Game::draw(Graphics& graphics) {
     }
     player_->draw(graphics);
     map_->draw(graphics);
+    particle_->draw(graphics);
     damage_texts_.draw(graphics);
     player_->drawHUD(graphics);
-    particle_->draw(graphics);
     graphics.flip();
 }

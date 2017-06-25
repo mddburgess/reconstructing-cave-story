@@ -27,6 +27,8 @@ set(SOURCE_FILES
         src/game.h
         src/graphics.cc
         src/graphics.h
+        src/head_bump_particle.cc
+        src/head_bump_particle.h
         src/input.cc
         src/input.h
         src/main.cc
@@ -40,6 +42,7 @@ set(SOURCE_FILES
         src/player_walking_animation.cc
         src/polar_star.cc
         src/polar_star.h
+        src/polar_vector.h
         src/projectile.h
         src/rectangle.h
         src/sprite.cc
@@ -48,7 +51,7 @@ set(SOURCE_FILES
         src/timer.cc
         src/timer.h
         src/units.h
-        src/varying_width_sprite.h src/head_bump_particle.h src/head_bump_particle.cc)
+        src/varying_width_sprite.h)
 
 add_executable(cavestory ${SOURCE_FILES})
 target_link_libraries(cavestory ${Boost_LIBRARIES})

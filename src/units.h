@@ -48,6 +48,14 @@ namespace units {
         return degrees * kPi / 180.0f;
     }
 
+    inline Game sin(Degrees degrees) {
+        return static_cast<Game>(std::sin(degreesToRadians(degrees)));
+    }
+
+    inline Game cos(Degrees degrees) {
+        return static_cast<Game>(std::cos(degreesToRadians(degrees)));
+    }
+
     const Game kHalfTile = tileToGame(1) / 2.0f;
 }
 
