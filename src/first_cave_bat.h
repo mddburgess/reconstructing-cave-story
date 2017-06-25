@@ -15,11 +15,22 @@ struct FirstCaveBat {
     void draw(Graphics& graphics) const;
 
     Rectangle damageRectangle() const {
-        return Rectangle(x_ + units::kHalfTile, y_ + units::kHalfTile,
-                         0, 0);
+        return Rectangle(x_ + units::kHalfTile,
+                         y_ + units::kHalfTile,
+                         0,
+                         0);
+    }
+    Rectangle collisionRectangle() const {
+        return Rectangle(x_,
+                         y_,
+                         units::tileToGame(1),
+                         units::tileToGame(1));
     }
 
     units::HP contactDamage() const;
+    void takeDamage(units::HP damage) {
+        printf("%d! collision occurred\n", damage);
+    }
 
 private:
     typedef std::tuple<HorizontalFacing> SpriteTuple;

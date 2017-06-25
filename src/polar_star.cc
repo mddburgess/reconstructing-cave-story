@@ -192,7 +192,14 @@ void PolarStar::initializeSprite(Graphics& graphics, const SpriteState& sprite_s
             units::tileToPixel(tile_y),
             units::gameToPixel(kGunWidth),
             units::gameToPixel(kGunHeight));
-};
+}
+
+std::vector<std::shared_ptr<::Projectile>> PolarStar::getProjectiles() {
+    std::vector<std::shared_ptr<::Projectile>> projectiles;
+    if (projectile_a_) projectiles.push_back(projectile_a_);
+    if (projectile_b_) projectiles.push_back(projectile_b_);
+    return projectiles;
+}
 
 PolarStar::Projectile::Projectile(std::shared_ptr <Sprite> sprite,
                                   HorizontalFacing horizontal_direction,
@@ -203,7 +210,8 @@ PolarStar::Projectile::Projectile(std::shared_ptr <Sprite> sprite,
   vertical_direction_(vertical_direction),
   x_(x),
   y_(y),
-  offset_(0)
+  offset_(0),
+  alive_(true)
 {
 }
 
@@ -216,7 +224,7 @@ bool PolarStar::Projectile::update(units::MS elapsed_time, const Map& map) {
             return false;
         }
     }
-    return offset_ < kProjectileMaxOffset;
+    return alive_ && offset_ < kProjectileMaxOffset;
 }
 
 void PolarStar::Projectile::draw(Graphics& graphics) {

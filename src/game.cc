@@ -110,6 +110,13 @@ void Game::update(units::MS elapsed_time_ms) {
     player_->update(elapsed_time_ms, *map_);
     bat_->update(elapsed_time_ms, player_->center_x());
 
+    std::vector<std::shared_ptr<Projectile>> projectiles(player_->getProjectiles());
+    for (std::shared_ptr<Projectile> projectile : projectiles) {
+        if (bat_->collisionRectangle().collidesWith(projectile->collisionRectangle())) {
+            bat_->takeDamage(projectile->contactDamage());
+            projectile->collideWithEnemy();
+        }
+    }
     if (bat_->damageRectangle().collidesWith(player_->damageRectangle())) {
         player_->takeDamage(bat_->contactDamage());
     }

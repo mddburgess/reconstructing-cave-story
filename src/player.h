@@ -13,6 +13,7 @@
 
 struct Graphics;
 struct Map;
+struct Projectile;
 
 struct Player {
     Player(Graphics& graphics, units::Game x, units::Game y);
@@ -41,6 +42,9 @@ struct Player {
     units::Game center_x() const { return x_ + units::kHalfTile; }
     units::Game center_y() const { return y_ + units::kHalfTile; }
 
+    std::vector<std::shared_ptr<Projectile>> getProjectiles() {
+        return polar_star_.getProjectiles();
+    }
 private:
     enum MotionType {
         FIRST_MOTION_TYPE,

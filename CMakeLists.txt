@@ -38,6 +38,7 @@ set(SOURCE_FILES
         src/player_walking_animation.cc
         src/polar_star.cc
         src/polar_star.h
+        src/projectile.h
         src/rectangle.h
         src/sprite.cc
         src/sprite.h
