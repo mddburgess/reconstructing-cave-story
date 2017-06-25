@@ -20,6 +20,7 @@ set(SOURCE_FILES
         src/damage_text.h
         src/damage_texts.cc
         src/damage_texts.h
+        src/damageable.h
         src/first_cave_bat.cc
         src/first_cave_bat.h
         src/game.cc

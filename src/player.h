@@ -2,6 +2,7 @@
 #define PLAYER_H_
 
 #include "damage_text.h"
+#include "damageable.h"
 #include "number_sprite.h"
 #include "polar_star.h"
 #include "sprite.h"
@@ -15,7 +16,7 @@ struct Graphics;
 struct Map;
 struct Projectile;
 
-struct Player {
+struct Player : public Damageable {
     Player(Graphics& graphics, units::Game x, units::Game y);
 
     void update(units::MS elapsed_time_ms, const Map& map);
@@ -39,8 +40,9 @@ struct Player {
     void takeDamage(units::HP damage);
 
     Rectangle damageRectangle() const;
-    units::Game center_x() const { return x_ + units::kHalfTile; }
-    units::Game center_y() const { return y_ + units::kHalfTile; }
+    units::Game center_x() const override { return x_ + units::kHalfTile; }
+    units::Game center_y() const override { return y_ + units::kHalfTile; }
+    std::shared_ptr<DamageText> get_damage_text() override { return damage_text_; }
 
     std::vector<std::shared_ptr<Projectile>> getProjectiles() {
         return polar_star_.getProjectiles();
@@ -138,7 +140,7 @@ private:
     bool interacting_;
     Health health_;
     Timer invincible_timer_;
-    DamageText damage_text_;
+    std::shared_ptr<DamageText> damage_text_;
     WalkingAnimation walking_animation_;
     PolarStar polar_star_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;

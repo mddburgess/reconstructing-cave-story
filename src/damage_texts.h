@@ -5,11 +5,12 @@
 #include <memory>
 #include "units.h"
 
-struct Damageable;
 struct DamageText;
+struct Damageable;
 struct Graphics;
 
 struct DamageTexts {
+    void addDamageable(std::shared_ptr<Damageable> damageable);
     void update(units::MS elapsed_time);
     void draw(Graphics& graphics);
 

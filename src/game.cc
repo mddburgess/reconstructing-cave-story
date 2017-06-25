@@ -1,11 +1,11 @@
 #include "game.h"
+
 #include <SDL2/SDL.h>
+#include "first_cave_bat.h"
 #include "graphics.h"
-#include "player.h"
 #include "input.h"
 #include "map.h"
-#include "first_cave_bat.h"
-#include "timer.h"
+#include "player.h"
 
 namespace {
     const units::FPS kFps = 60;
@@ -30,10 +30,12 @@ void Game::eventLoop() {
     Input input;
     SDL_Event event;
 
-    player_ = std::make_unique<Player>(graphics,
+    player_ = std::make_shared<Player>(graphics,
                                        units::tileToGame(kScreenWidth / 2),
                                        units::tileToGame(kScreenHeight / 2));
-    bat_ = std::make_unique<FirstCaveBat>(graphics,
+    damage_texts_.addDamageable(player_);
+
+    bat_ = std::make_shared<FirstCaveBat>(graphics,
                                           units::tileToGame(7),
                                           units::tileToGame(kScreenHeight / 2 + 1));
     map_.reset(Map::createTestMap(graphics));
@@ -107,6 +109,7 @@ void Game::eventLoop() {
 
 void Game::update(units::MS elapsed_time_ms) {
     Timer::updateAll(elapsed_time_ms);
+    damage_texts_.update(elapsed_time_ms);
     player_->update(elapsed_time_ms, *map_);
     bat_->update(elapsed_time_ms, player_->center_x());
 
@@ -128,6 +131,7 @@ void Game::draw(Graphics& graphics) {
     bat_->draw(graphics);
     player_->draw(graphics);
     map_->draw(graphics);
+    damage_texts_.draw(graphics);
     player_->drawHUD(graphics);
     graphics.flip();
 }

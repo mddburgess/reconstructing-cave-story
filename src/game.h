@@ -2,6 +2,7 @@
 #define GAME_H_
 
 #include <memory>
+#include "damage_texts.h"
 #include "units.h"
 
 struct Player;
@@ -21,9 +22,10 @@ private:
     void update(units::MS elapsed_time_ms);
     void draw(Graphics& graphics);
 
-    std::unique_ptr<Player> player_;
-    std::unique_ptr<FirstCaveBat> bat_;
+    std::shared_ptr<Player> player_;
+    std::shared_ptr<FirstCaveBat> bat_;
     std::unique_ptr<Map> map_;
+    DamageTexts damage_texts_;
 };
 
 #endif // GAME_H_
