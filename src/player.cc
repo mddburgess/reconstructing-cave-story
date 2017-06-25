@@ -1,12 +1,15 @@
 #include "player.h"
+
+#include <cassert>
+#include <cmath>
+#include "animated_sprite.h"
 #include "game.h"
 #include "graphics.h"
-#include "animated_sprite.h"
+#include "head_bump_particle.h"
 #include "map.h"
-#include "rectangle.h"
-#include <cmath>
-#include <cassert>
 #include "number_sprite.h"
+#include "particle_system.h"
+#include "rectangle.h"
 
 namespace {
     // Walk motion
@@ -86,7 +89,10 @@ Player::Player(Graphics& graphics, units::Game x, units::Game y) :
     initializeSprites(graphics);
 }
 
-void Player::update(units::MS elapsed_time_ms, const Map& map) {
+void Player::update(units::MS elapsed_time_ms,
+                    const Map& map,
+                    ParticleTools& particle_tools)
+{
     sprites_[getSpriteState()]->update();
 
     health_.update(elapsed_time_ms);
@@ -95,7 +101,7 @@ void Player::update(units::MS elapsed_time_ms, const Map& map) {
     polar_star_.updateProjectiles(elapsed_time_ms, map);
 
     updateX(elapsed_time_ms, map);
-    updateY(elapsed_time_ms, map);
+    updateY(elapsed_time_ms, map, particle_tools);
 }
 
 void Player::draw(Graphics& graphics) {
@@ -373,14 +379,17 @@ void Player::updateX(units::MS elapsed_time_ms, const Map& map) {
     }
 }
 
-void Player::updateY(units::MS elapsed_time_ms, const Map& map) {
+void Player::updateY(units::MS elapsed_time_ms,
+                     const Map& map,
+                     ParticleTools& particle_tools)
+{
     // Update velocity
     const units::Acceleration gravity = jump_active_ && velocity_y_ < 0.0f
             ? kJumpGravity : kGravity;
     velocity_y_ = std::min(velocity_y_ + gravity * elapsed_time_ms, kMaxSpeedY);
 
     // Calculate delta
-    const units::Game delta = round(velocity_y_ * elapsed_time_ms);
+    const units::Game delta = static_cast<units::Game>(round(velocity_y_ * elapsed_time_ms));
     if (delta > 0.0f) {
         // Check collision in the direction of delta
         CollisionInfo info = getWallCollisionInfo(map, bottomCollision(delta));
@@ -398,6 +407,9 @@ void Player::updateY(units::MS elapsed_time_ms, const Map& map) {
         info = getWallCollisionInfo(map, topCollision(0));
         if (info.collided) {
             y_ = units::tileToGame(info.row) + kCollisionYHeight;
+            particle_tools.system.addNewParticle(std::make_shared<HeadBumpParticle>(
+                    particle_tools.graphics, center_x(), y_ + kCollisionYTop
+            ));
         }
     } else {
         // Check collision in the direction of delta
@@ -406,6 +418,9 @@ void Player::updateY(units::MS elapsed_time_ms, const Map& map) {
         if (info.collided) {
             y_ = units::tileToGame(info.row) + kCollisionYHeight;
             velocity_y_ = 0.0f;
+            particle_tools.system.addNewParticle(std::make_shared<HeadBumpParticle>(
+                    particle_tools.graphics, center_x(), y_ + kCollisionYTop
+            ));
         } else {
             y_ += delta;
             on_ground_ = false;

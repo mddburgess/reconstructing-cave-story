@@ -14,12 +14,15 @@
 
 struct Graphics;
 struct Map;
+struct ParticleTools;
 struct Projectile;
 
 struct Player : public Damageable {
     Player(Graphics& graphics, units::Game x, units::Game y);
 
-    void update(units::MS elapsed_time_ms, const Map& map);
+    void update(units::MS elapsed_time_ms,
+                const Map& map,
+                ParticleTools& particle_tools);
     void draw(Graphics& graphics);
     void drawHUD(Graphics& graphics);
 
@@ -114,7 +117,9 @@ private:
     Rectangle bottomCollision(units::Game delta) const;
 
     void updateX(units::MS elapsed_time_ms, const Map& map);
-    void updateY(units::MS elapsed_time_ms, const Map& map);
+    void updateY(units::MS elapsed_time_ms,
+                 const Map& map,
+                 ParticleTools& particle_tools);
 
     MotionType motionType() const;
     bool onGround() const { return on_ground_; }

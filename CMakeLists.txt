@@ -36,6 +36,9 @@ set(SOURCE_FILES
         src/map.h
         src/number_sprite.cc
         src/number_sprite.h
+        src/particle.h
+        src/particle_system.cc
+        src/particle_system.h
         src/player.cc
         src/player.h
         src/player_health.cc

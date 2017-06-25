@@ -1,6 +1,7 @@
 #ifndef HEAD_BUMP_PARTICLE_H_
 #define HEAD_BUMP_PARTICLE_H_
 
+#include "particle.h"
 #include "polar_vector.h"
 #include "sprite.h"
 #include "timer.h"
@@ -8,13 +9,13 @@
 
 struct Graphics;
 
-struct HeadBumpParticle {
+struct HeadBumpParticle : public Particle {
     HeadBumpParticle(Graphics& graphics,
                      units::Game center_x,
                      units::Game center_y);
 
-    bool update(units::MS elapsed_time);
-    void draw(Graphics& graphics);
+    bool update(units::MS elapsed_time) override;
+    void draw(Graphics& graphics) override;
 
 private:
     const units::Game center_x_, center_y_;
