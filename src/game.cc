@@ -3,15 +3,16 @@
 #include <cstdlib>
 #include <ctime>
 #include <SDL2/SDL.h>
+#include "death_cloud_particle.h"
 #include "first_cave_bat.h"
 #include "graphics.h"
+#include "gun_experience_hud.h"
 #include "input.h"
 #include "map.h"
 #include "player.h"
 
-#include "death_cloud_particle.h"
-
-namespace {
+namespace
+{
     const units::FPS kFps = 60;
     const units::MS kMaxFrameTime = 5 * 1000 / 60;
 }
@@ -20,17 +21,20 @@ namespace {
 units::Tile Game::kScreenWidth = 20;
 units::Tile Game::kScreenHeight = 15;
 
-Game::Game() {
+Game::Game()
+{
     srand(static_cast<unsigned int>(time(NULL)));
     SDL_Init(SDL_INIT_EVERYTHING);
     eventLoop();
 }
 
-Game::~Game() {
+Game::~Game()
+{
     SDL_Quit();
 }
 
-void Game::eventLoop() {
+void Game::eventLoop()
+{
     Graphics graphics;
     Input input;
     SDL_Event event;
@@ -46,6 +50,7 @@ void Game::eventLoop() {
     damage_texts_.addDamageable(bat_);
 
     map_.reset(Map::createTestMap(graphics));
+    gun_experience_hud_ = std::make_unique<GunExperienceHUD>(graphics);
 
     bool running = true;
     units::MS last_update_time = SDL_GetTicks();
@@ -149,7 +154,8 @@ void Game::update(units::MS elapsed_time_ms,
     }
 }
 
-void Game::draw(Graphics& graphics) {
+void Game::draw(Graphics& graphics)
+{
     graphics.clear();
     map_->drawBackground(graphics);
     if (bat_) {
@@ -161,5 +167,6 @@ void Game::draw(Graphics& graphics) {
     front_particle_system_.draw(graphics);
     damage_texts_.draw(graphics);
     player_->drawHUD(graphics);
+    gun_experience_hud_->draw(graphics, 1);
     graphics.flip();
 }

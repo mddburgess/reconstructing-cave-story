@@ -6,12 +6,14 @@
 #include "particle_system.h"
 #include "units.h"
 
-struct Player;
-struct Graphics;
-struct Map;
 struct FirstCaveBat;
+struct Graphics;
+struct GunExperienceHUD;
+struct Map;
+struct Player;
 
-struct Game {
+struct Game
+{
     Game();
     ~Game();
 
@@ -28,7 +30,7 @@ private:
     std::unique_ptr<Map> map_;
     ParticleSystem front_particle_system_, entity_particle_system_;
     DamageTexts damage_texts_;
-
+    std::unique_ptr<GunExperienceHUD> gun_experience_hud_;
 };
 
 #endif // GAME_H_

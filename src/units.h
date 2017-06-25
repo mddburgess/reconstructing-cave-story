@@ -4,9 +4,10 @@
 #include <cmath>
 #include "config.h"
 
-namespace units {
-
+namespace units
+{
     typedef int HP;
+    typedef unsigned int GunLevel;
 
     typedef float Game;
     typedef int Pixel;
@@ -21,38 +22,46 @@ namespace units {
     typedef float Acceleration; // Game / MS^2
     typedef float AngularVelocity; // Degrees / MS
 
-    namespace {
+    namespace
+    {
         const Game kTileSize = 32.0f;
         const double kPi = atan(1) * 4;
     }
 
-    inline Pixel gameToPixel(Game game) {
+    inline Pixel gameToPixel(Game game)
+    {
         return config::getGraphicsQuality() == config::HIGH_QUALITY
             ? Pixel(round(game))
             : Pixel(round(game) / 2);
     }
 
-    inline Tile gameToTile(Game game) {
+    inline Tile gameToTile(Game game)
+    {
         return Tile(game / kTileSize);
     }
 
-    inline Game tileToGame(Tile tile) {
+    inline Game tileToGame(Tile tile)
+    {
         return tile * kTileSize;
     }
 
-    inline Pixel tileToPixel(Tile tile) {
+    inline Pixel tileToPixel(Tile tile)
+    {
         return gameToPixel(tileToGame(tile));
     }
 
-    inline double degreesToRadians(Degrees degrees) {
+    inline double degreesToRadians(Degrees degrees)
+    {
         return degrees * kPi / 180.0f;
     }
 
-    inline Game sin(Degrees degrees) {
+    inline Game sin(Degrees degrees)
+    {
         return static_cast<Game>(std::sin(degreesToRadians(degrees)));
     }
 
-    inline Game cos(Degrees degrees) {
+    inline Game cos(Degrees degrees)
+    {
         return static_cast<Game>(std::cos(degreesToRadians(degrees)));
     }
 

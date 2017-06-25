@@ -29,6 +29,8 @@ set(SOURCE_FILES
         src/game.h
         src/graphics.cc
         src/graphics.h
+        src/gun_experience_hud.cc
+        src/gun_experience_hud.h
         src/head_bump_particle.cc
         src/head_bump_particle.h
         src/immobile_single_loop_particle.cc
