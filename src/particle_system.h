@@ -8,8 +8,10 @@
 struct Graphics;
 struct Particle;
 
-struct ParticleSystem {
-    void addNewParticle(std::shared_ptr<Particle> particle) {
+struct ParticleSystem
+{
+    void addNewParticle(std::shared_ptr<Particle> particle)
+    {
         particles_.insert(particle);
     }
 
@@ -21,8 +23,10 @@ private:
     ParticleSet particles_;
 };
 
-struct ParticleTools {
-    ParticleSystem& system;
+struct ParticleTools
+{
+    ParticleSystem& front_system;
+    ParticleSystem& entity_system;
     Graphics& graphics;
 };
 

@@ -26,7 +26,7 @@ private:
     std::shared_ptr<Player> player_;
     std::shared_ptr<FirstCaveBat> bat_;
     std::unique_ptr<Map> map_;
-    ParticleSystem particle_system_;
+    ParticleSystem front_particle_system_, entity_particle_system_;
     DamageTexts damage_texts_;
 
 };

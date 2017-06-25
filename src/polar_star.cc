@@ -223,7 +223,7 @@ PolarStar::Projectile::Projectile(std::shared_ptr <Sprite> sprite,
   offset_(0),
   alive_(true)
 {
-    particle_tools.system.addNewParticle(
+    particle_tools.front_system.addNewParticle(
             std::make_shared<ProjectileStarParticle>(
                     particle_tools.graphics, x, y));
 }
@@ -260,7 +260,7 @@ bool PolarStar::Projectile::update(units::MS elapsed_time,
                 particle_x = getX();
                 particle_y -= units::kHalfTile;
             }
-            particle_tools.system.addNewParticle(
+            particle_tools.front_system.addNewParticle(
                     std::make_shared<ProjectileWallParticle>(
                             particle_tools.graphics, particle_x, particle_y));
             return false;
@@ -269,7 +269,7 @@ bool PolarStar::Projectile::update(units::MS elapsed_time,
     if (!alive_) {
         return false;
     } else if (offset_ > kProjectileMaxOffset) {
-        particle_tools.system.addNewParticle(
+        particle_tools.front_system.addNewParticle(
                 std::make_shared<ProjectileStarParticle>(
                         particle_tools.graphics, getX(), getY()));
         return false;

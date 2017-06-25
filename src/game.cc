@@ -88,7 +88,9 @@ void Game::eventLoop() {
 
         // Player fire
         if (input.wasKeyPressed(SDLK_x)) {
-            ParticleTools particle_tools = { particle_system_, graphics };
+            ParticleTools particle_tools = { front_particle_system_,
+                                             entity_particle_system_,
+                                             graphics };
             player_->startFire(particle_tools);
         } else if (input.wasKeyReleased(SDLK_x)) {
             player_->stopFire();
@@ -120,18 +122,18 @@ void Game::update(units::MS elapsed_time_ms,
 {
     Timer::updateAll(elapsed_time_ms);
     damage_texts_.update(elapsed_time_ms);
-    particle_system_.update(elapsed_time_ms);
-    ParticleTools particle_tools = { particle_system_, graphics };
+    front_particle_system_.update(elapsed_time_ms);
+    entity_particle_system_.update(elapsed_time_ms);
+    ParticleTools particle_tools = { front_particle_system_,
+                                     entity_particle_system_,
+                                     graphics };
     player_->update(elapsed_time_ms, *map_, particle_tools);
     if (bat_) {
         if (!bat_->update(elapsed_time_ms, player_->center_x())) {
-            particle_system_.addNewParticle(
-                    std::make_shared<DeathCloudParticle>(
-                            graphics,
-                            bat_->center_x(),
-                            bat_->center_y(),
-                            0.12f,
-                            90.0f));
+            DeathCloudParticle::createRandomDeathClouds(particle_tools,
+                                                        bat_->center_x(),
+                                                        bat_->center_y(),
+                                                        3);
             bat_.reset();
         };
     }
@@ -154,8 +156,9 @@ void Game::draw(Graphics& graphics) {
         bat_->draw(graphics);
     }
     player_->draw(graphics);
+    entity_particle_system_.draw(graphics);
     map_->draw(graphics);
-    particle_system_.draw(graphics);
+    front_particle_system_.draw(graphics);
     damage_texts_.draw(graphics);
     player_->drawHUD(graphics);
     graphics.flip();
