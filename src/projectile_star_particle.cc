@@ -13,26 +13,13 @@ namespace {
 ProjectileStarParticle::ProjectileStarParticle(Graphics& graphics,
                                                units::Game x,
                                                units::Game y) :
-    x_(x),
-    y_(y),
-    sprite_(graphics,
+    ImmobileSingleLoopParticle(graphics,
             kSpriteName,
             units::tileToPixel(kSourceX),
             units::tileToPixel(kSourceY),
             units::tileToPixel(kSourceWidth),
             units::tileToPixel(kSourceHeight),
             kFps,
-            kNumFrames)
+            kNumFrames, x, y)
 {
-}
-
-bool ProjectileStarParticle::update(units::MS elapsed_time)
-{
-    sprite_.update();
-    return sprite_.num_completed_loops() == 0;
-}
-
-void ProjectileStarParticle::draw(Graphics& graphics)
-{
-    sprite_.draw(graphics, x_, y_);
 }

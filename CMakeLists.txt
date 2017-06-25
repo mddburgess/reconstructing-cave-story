@@ -29,6 +29,8 @@ set(SOURCE_FILES
         src/graphics.h
         src/head_bump_particle.cc
         src/head_bump_particle.h
+        src/immobile_single_loop_particle.cc
+        src/immobile_single_loop_particle.h
         src/input.cc
         src/input.h
         src/main.cc
@@ -49,6 +51,8 @@ set(SOURCE_FILES
         src/projectile.h
         src/projectile_star_particle.cc
         src/projectile_star_particle.h
+        src/projectile_wall_particle.cc
+        src/projectile_wall_particle.h
         src/rectangle.h
         src/sprite.cc
         src/sprite.h
