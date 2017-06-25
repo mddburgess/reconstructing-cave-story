@@ -9,6 +9,8 @@
 #include "map.h"
 #include "player.h"
 
+#include "death_cloud_particle.h"
+
 namespace {
     const units::FPS kFps = 60;
     const units::MS kMaxFrameTime = 5 * 1000 / 60;
@@ -123,6 +125,13 @@ void Game::update(units::MS elapsed_time_ms,
     player_->update(elapsed_time_ms, *map_, particle_tools);
     if (bat_) {
         if (!bat_->update(elapsed_time_ms, player_->center_x())) {
+            particle_system_.addNewParticle(
+                    std::make_shared<DeathCloudParticle>(
+                            graphics,
+                            bat_->center_x(),
+                            bat_->center_y(),
+                            0.12f,
+                            90.0f));
             bat_.reset();
         };
     }

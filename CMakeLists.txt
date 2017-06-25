@@ -21,6 +21,8 @@ set(SOURCE_FILES
         src/damage_texts.cc
         src/damage_texts.h
         src/damageable.h
+        src/death_cloud_particle.cc
+        src/death_cloud_particle.h
         src/first_cave_bat.cc
         src/first_cave_bat.h
         src/game.cc
