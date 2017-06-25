@@ -1,6 +1,7 @@
 #ifndef FIRST_CAVE_BAT_H_
 #define FIRST_CAVE_BAT_H_
 
+#include "damage_text.h"
 #include "rectangle.h"
 #include "sprite_state.h"
 #include "units.h"
@@ -12,7 +13,7 @@ struct FirstCaveBat {
     FirstCaveBat(Graphics& graphics, units::Game x, units::Game y);
 
     void update(units::MS elapsed_time, units::Game player_x);
-    void draw(Graphics& graphics) const;
+    void draw(Graphics& graphics);
 
     Rectangle damageRectangle() const {
         return Rectangle(x_ + units::kHalfTile,
@@ -29,7 +30,7 @@ struct FirstCaveBat {
 
     units::HP contactDamage() const;
     void takeDamage(units::HP damage) {
-        printf("%d! collision occurred\n", damage);
+        damage_text_.setDamage(damage);
     }
 
 private:
@@ -39,15 +40,19 @@ private:
         HorizontalFacing horizontal_facing() const { return std::get<0>(*this); }
     };
 
+    units::Game center_x() const { return x_ + units::kHalfTile; }
+    units::Game center_y() const { return y_ + units::kHalfTile; }
+
     void initializeSprites(Graphics& graphics);
     void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);
     SpriteState getSpriteState() const;
 
-    const units::Game center_y_;
+    const units::Game flight_center_y_;
     units::Game x_, y_;
     units::Degrees flight_angle_;
     HorizontalFacing facing_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
+    DamageText damage_text_;
 };
 
 #endif // FIRST_CAVE_BAT_H_

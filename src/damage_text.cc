@@ -6,23 +6,27 @@ namespace {
     const units::MS kDamageTime = 2000;
 }
 
-DamageText::DamageText() :
-        damage_(0),
-        offset_y_(0),
-        timer_(kDamageTime)
-{}
+DamageText::DamageText() : damage_(0),
+                           offset_y_(0),
+                           timer_(kDamageTime)
+{
+}
 
 void DamageText::setDamage(units::HP damage) {
-    damage_ = damage;
-    offset_y_ = 0;
+    if (damage_ == 0) {
+        offset_y_ = 0;
+    }
+    damage_ += damage;
     timer_.reset();
 }
 
 void DamageText::update(units::MS elapsed_time) {
     if (timer_.expired()) {
-        return;
+        damage_ = 0;
+    } else {
+        offset_y_ = std::max(-units::tileToGame(1),
+                             offset_y_ + kVelocity * elapsed_time);
     }
-    offset_y_ = std::max(-units::tileToGame(1), offset_y_ + kVelocity * elapsed_time);
 }
 
 void DamageText::draw(Graphics& graphics, units::Game center_x, units::Game center_y) {
