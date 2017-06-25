@@ -7,6 +7,8 @@ namespace {
 }
 
 DamageText::DamageText() : damage_(0),
+                           center_x_(0),
+                           center_y_(0),
                            offset_y_(0),
                            timer_(kDamageTime)
 {
@@ -29,10 +31,15 @@ void DamageText::update(units::MS elapsed_time) {
     }
 }
 
-void DamageText::draw(Graphics& graphics, units::Game center_x, units::Game center_y) {
+void DamageText::draw(Graphics& graphics) {
     if (timer_.expired()) {
         return;
     }
     NumberSprite::DamageNumber(graphics, damage_)
-            .drawCentered(graphics, center_x, center_y + offset_y_);
+            .drawCentered(graphics, center_x_, center_y_ + offset_y_);
+}
+
+void DamageText::setPosition(units::Game center_x, units::Game center_y) {
+    center_x_ = center_x;
+    center_y_ = center_y;
 }

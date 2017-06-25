@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.8)
 project(cavestory)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(SDL2 REQUIRED)
@@ -19,6 +18,8 @@ set(SOURCE_FILES
         src/config.h
         src/damage_text.cc
         src/damage_text.h
+        src/damage_texts.cc
+        src/damage_texts.h
         src/first_cave_bat.cc
         src/first_cave_bat.h
         src/game.cc

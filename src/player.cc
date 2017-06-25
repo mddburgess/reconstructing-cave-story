@@ -85,6 +85,7 @@ void Player::update(units::MS elapsed_time_ms, const Map& map) {
 
     health_.update(elapsed_time_ms);
     damage_text_.update(elapsed_time_ms);
+    damage_text_.setPosition(center_x(), center_y());
 
     walking_animation_.update();
     polar_star_.updateProjectiles(elapsed_time_ms, map);
@@ -104,7 +105,7 @@ void Player::drawHUD(Graphics& graphics) {
     if (spriteIsVisible()) {
         health_.draw(graphics);
     }
-    damage_text_.draw(graphics, center_x(), center_y());
+    damage_text_.draw(graphics);
 }
 
 void Player::startMovingLeft() {
