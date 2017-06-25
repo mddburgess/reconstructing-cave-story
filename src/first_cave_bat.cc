@@ -15,15 +15,17 @@ namespace {
 
 FirstCaveBat::FirstCaveBat(Graphics& graphics, units::Game x, units::Game y)
     : flight_center_y_(y),
+      alive_(true),
       x_(x),
       y_(y),
       facing_(RIGHT),
       flight_angle_(0.0f)
 {
+    damage_text_ = std::make_shared<DamageText>();
     initializeSprites(graphics);
 }
 
-void FirstCaveBat::update(units::MS elapsed_time, units::Game player_x) {
+bool FirstCaveBat::update(units::MS elapsed_time, units::Game player_x) {
     flight_angle_ += kAngularVelocity * elapsed_time;
     facing_ = x_ + units::kHalfTile > player_x ? LEFT : RIGHT;
 
@@ -31,13 +33,11 @@ void FirstCaveBat::update(units::MS elapsed_time, units::Game player_x) {
             std::sin(units::degreesToRadians(flight_angle_)));
 
     sprites_[getSpriteState()]->update();
-    damage_text_.update(elapsed_time);
-    damage_text_.setPosition(center_x(), center_y());
+    return alive_;
 }
 
 void FirstCaveBat::draw(Graphics& graphics) {
     sprites_.at(getSpriteState())->draw(graphics, x_, y_);
-    damage_text_.draw(graphics);
 }
 
 units::HP FirstCaveBat::contactDamage() const {

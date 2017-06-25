@@ -2,6 +2,7 @@
 #define FIRST_CAVE_BAT_H_
 
 #include "damage_text.h"
+#include "damageable.h"
 #include "rectangle.h"
 #include "sprite_state.h"
 #include "units.h"
@@ -9,10 +10,10 @@
 struct Graphics;
 struct Sprite;
 
-struct FirstCaveBat {
+struct FirstCaveBat : public Damageable {
     FirstCaveBat(Graphics& graphics, units::Game x, units::Game y);
 
-    void update(units::MS elapsed_time, units::Game player_x);
+    bool update(units::MS elapsed_time, units::Game player_x);
     void draw(Graphics& graphics);
 
     Rectangle damageRectangle() const {
@@ -30,8 +31,13 @@ struct FirstCaveBat {
 
     units::HP contactDamage() const;
     void takeDamage(units::HP damage) {
-        damage_text_.setDamage(damage);
+        damage_text_->setDamage(damage);
+        alive_ = false;
     }
+
+    units::Game center_x() const override { return x_ + units::kHalfTile; }
+    units::Game center_y() const override { return y_ + units::kHalfTile; }
+    std::shared_ptr<DamageText> get_damage_text() override { return damage_text_; }
 
 private:
     typedef std::tuple<HorizontalFacing> SpriteTuple;
@@ -40,19 +46,17 @@ private:
         HorizontalFacing horizontal_facing() const { return std::get<0>(*this); }
     };
 
-    units::Game center_x() const { return x_ + units::kHalfTile; }
-    units::Game center_y() const { return y_ + units::kHalfTile; }
-
     void initializeSprites(Graphics& graphics);
     void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);
     SpriteState getSpriteState() const;
 
     const units::Game flight_center_y_;
+    bool alive_;
     units::Game x_, y_;
     units::Degrees flight_angle_;
     HorizontalFacing facing_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
-    DamageText damage_text_;
+    std::shared_ptr<DamageText> damage_text_;
 };
 
 #endif // FIRST_CAVE_BAT_H_

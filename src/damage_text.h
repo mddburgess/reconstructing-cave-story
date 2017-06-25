@@ -9,7 +9,7 @@ struct Graphics;
 struct DamageText {
     DamageText();
     void setDamage(units::HP damage);
-    void update(units::MS elapsed_time);
+    bool update(units::MS elapsed_time);
     void setPosition(units::Game center_x, units::Game center_y);
     void draw(Graphics& graphics);
 

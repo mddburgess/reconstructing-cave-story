@@ -9,10 +9,15 @@ void DamageTexts::addDamageable(std::shared_ptr<Damageable> damageable) {
 }
 
 void DamageTexts::update(units::MS elapsed_time) {
-    for (DamageTextMap::value_type& kv : damage_text_map_) {
-        kv.first->update(elapsed_time);
-        if (auto damageable = kv.second.lock()) {
-            kv.first->setPosition(damageable->center_x(), damageable->center_y());
+    for (auto iter = damage_text_map_.begin(); iter != damage_text_map_.end(); ) {
+        iter->first->update(elapsed_time);
+        if (auto damageable = iter->second.lock()) {
+            iter->first->setPosition(damageable->center_x(), damageable->center_y());
+        }
+        if (iter->first->update(elapsed_time) || !iter->second.expired()) {
+            ++iter;
+        } else {
+            damage_text_map_.erase(iter++);
         }
     }
 }

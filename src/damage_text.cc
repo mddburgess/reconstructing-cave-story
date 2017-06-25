@@ -22,13 +22,14 @@ void DamageText::setDamage(units::HP damage) {
     timer_.reset();
 }
 
-void DamageText::update(units::MS elapsed_time) {
+bool DamageText::update(units::MS elapsed_time) {
     if (timer_.expired()) {
         damage_ = 0;
     } else {
         offset_y_ = std::max(-units::tileToGame(1),
                              offset_y_ + kVelocity * elapsed_time);
     }
+    return !timer_.expired();
 }
 
 void DamageText::draw(Graphics& graphics) {

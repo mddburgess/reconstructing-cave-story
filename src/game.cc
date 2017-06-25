@@ -38,6 +38,8 @@ void Game::eventLoop() {
     bat_ = std::make_shared<FirstCaveBat>(graphics,
                                           units::tileToGame(7),
                                           units::tileToGame(kScreenHeight / 2 + 1));
+    damage_texts_.addDamageable(bat_);
+
     map_.reset(Map::createTestMap(graphics));
 
     bool running = true;
@@ -111,16 +113,19 @@ void Game::update(units::MS elapsed_time_ms) {
     Timer::updateAll(elapsed_time_ms);
     damage_texts_.update(elapsed_time_ms);
     player_->update(elapsed_time_ms, *map_);
-    bat_->update(elapsed_time_ms, player_->center_x());
-
+    if (bat_) {
+        if (!bat_->update(elapsed_time_ms, player_->center_x())) {
+            bat_.reset();
+        };
+    }
     std::vector<std::shared_ptr<Projectile>> projectiles(player_->getProjectiles());
     for (std::shared_ptr<Projectile> projectile : projectiles) {
-        if (bat_->collisionRectangle().collidesWith(projectile->collisionRectangle())) {
+        if (bat_ && bat_->collisionRectangle().collidesWith(projectile->collisionRectangle())) {
             bat_->takeDamage(projectile->contactDamage());
             projectile->collideWithEnemy();
         }
     }
-    if (bat_->damageRectangle().collidesWith(player_->damageRectangle())) {
+    if (bat_ && bat_->damageRectangle().collidesWith(player_->damageRectangle())) {
         player_->takeDamage(bat_->contactDamage());
     }
 }
@@ -128,7 +133,9 @@ void Game::update(units::MS elapsed_time_ms) {
 void Game::draw(Graphics& graphics) {
     graphics.clear();
     map_->drawBackground(graphics);
-    bat_->draw(graphics);
+    if (bat_) {
+        bat_->draw(graphics);
+    }
     player_->draw(graphics);
     map_->draw(graphics);
     damage_texts_.draw(graphics);
