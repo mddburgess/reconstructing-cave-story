@@ -43,10 +43,12 @@ Player::Health::Health(Graphics& graphics) :
                         units::gameToPixel(kHealthFillSourceX),
                         units::gameToPixel(kHealthFillSourceY),
                         units::gameToPixel(kMaxFillWidth),
+                        units::gameToPixel(kMaxFillWidth),
                         units::gameToPixel(kHealthFillSourceHeight)),
     damage_fill_sprite_(graphics, kSpritePath,
                         units::gameToPixel(kHealthDamageSourceX),
                         units::gameToPixel(kHealthDamageSourceY),
+                        units::gameToPixel(kMaxFillWidth),
                         units::gameToPixel(0),
                         units::gameToPixel(kHealthDamageSourceHeight))
 {
@@ -61,13 +63,10 @@ void Player::Health::update(units::MS elapsed_time) {
 
 void Player::Health::draw(Graphics& graphics) {
     health_bar_sprite_.draw(graphics, kHealthBarX, kHealthBarY);
-    health_fill_sprite_.draw(graphics, kHealthFillX, kHealthFillY);
-
     if (damage_ > 0) {
-        damage_fill_sprite_.draw(graphics,
-                                 kHealthFillX + fillOffset(current_health_ - damage_),
-                                 kHealthFillY);
+        damage_fill_sprite_.draw(graphics, kHealthFillX, kHealthFillY);
     }
+    health_fill_sprite_.draw(graphics, kHealthFillX, kHealthFillY);
 
     NumberSprite::HUDNumber(graphics, current_health_, kHealthNumberNumDigits).draw(
             graphics, kHealthNumberX, kHealthNumberY);
@@ -76,11 +75,9 @@ void Player::Health::draw(Graphics& graphics) {
 bool Player::Health::takeDamage(units::HP damage) {
     damage_ = damage;
     damage_timer_.reset();
-    health_fill_sprite_.set_width(units::gameToPixel(fillOffset(current_health_ - damage)));
-    damage_fill_sprite_.set_width(units::gameToPixel(fillOffset(damage)));
+    health_fill_sprite_.set_percentage_width(
+            (current_health_ - damage) * 1.0f / max_health_);
+    damage_fill_sprite_.set_percentage_width(
+            current_health_ * 1.0f / max_health_);
     return false;
-}
-
-units::Game Player::Health::fillOffset(units::HP health) const {
-    return kMaxFillWidth * health / max_health_;
 }

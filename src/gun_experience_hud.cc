@@ -19,6 +19,11 @@ namespace
     const units::Game kExperienceBarSourceWidth = 5 * units::kHalfTile;
     const units::Game kExperienceBarSourceHeight = units::kHalfTile;
 
+    const units::Game kFlashSourceX = 5 * units::kHalfTile;
+    const units::Tile kFlashSourceY = 5;
+    const units::MS kFlashTime = 800;
+    const units::MS kFlashPeriod = 40;
+
     const std::string kSpriteName("TextBox");
 }
 
@@ -34,7 +39,14 @@ GunExperienceHUD::GunExperienceHUD(Graphics& graphics) :
                   units::tileToPixel(kLevelSourceX),
                   units::gameToPixel(kLevelSourceY),
                   units::tileToPixel(kLevelSourceWidth),
-                  units::gameToPixel(kLevelSourceHeight))
+                  units::gameToPixel(kLevelSourceHeight)),
+    flash_sprite_(graphics,
+                  kSpriteName,
+                  units::gameToPixel(kFlashSourceX),
+                  units::tileToPixel(kFlashSourceY),
+                  units::gameToPixel(kExperienceBarSourceWidth),
+                  units::gameToPixel(kExperienceBarSourceHeight)),
+    flash_timer_(kFlashTime)
 {
 }
 
@@ -44,4 +56,7 @@ void GunExperienceHUD::draw(Graphics& graphics, units::GunLevel gun_level)
     NumberSprite::HUDNumber(graphics, gun_level, 2)
             .draw(graphics, kLevelNumberDrawX, kDrawY);
     experience_bar_sprite_.draw(graphics, kExperienceBarDrawX, kDrawY);
+    if (flash_timer_.active() && (flash_timer_.current_time() / kFlashPeriod) % 2 == 0) {
+        flash_sprite_.draw(graphics, kExperienceBarDrawX, kDrawY);
+    }
 }

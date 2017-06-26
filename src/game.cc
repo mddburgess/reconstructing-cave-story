@@ -97,6 +97,7 @@ void Game::eventLoop()
                                              entity_particle_system_,
                                              graphics };
             player_->startFire(particle_tools);
+            gun_experience_hud_->activateFlash();
         } else if (input.wasKeyReleased(SDLK_x)) {
             player_->stopFire();
         }

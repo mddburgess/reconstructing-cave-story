@@ -95,9 +95,8 @@ private:
         void update(units::MS elapsed_time);
         void draw(Graphics& graphics);
         bool takeDamage(units::HP damage);
-    private:
-        units::Game fillOffset(units::HP health) const;
 
+    private:
         units::HP damage_;
         Timer damage_timer_;
         units::HP max_health_;
