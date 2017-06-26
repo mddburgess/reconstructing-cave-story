@@ -30,7 +30,6 @@ private:
     std::unique_ptr<Map> map_;
     ParticleSystem front_particle_system_, entity_particle_system_;
     DamageTexts damage_texts_;
-    std::unique_ptr<GunExperienceHUD> gun_experience_hud_;
 };
 
 #endif // GAME_H_
