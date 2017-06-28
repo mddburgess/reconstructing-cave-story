@@ -3,6 +3,7 @@
 
 #include "damage_text.h"
 #include "damageable.h"
+#include "gun_experience_hud.h"
 #include "number_sprite.h"
 #include "polar_star.h"
 #include "sprite.h"
@@ -146,6 +147,7 @@ private:
     Timer invincible_timer_;
     std::shared_ptr<DamageText> damage_text_;
     WalkingAnimation walking_animation_;
+    GunExperienceHUD gun_experience_hud_;
     PolarStar polar_star_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprites_;
 };

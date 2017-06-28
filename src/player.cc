@@ -83,6 +83,7 @@ Player::Player(Graphics& graphics, units::Game x, units::Game y) :
     interacting_(false),
     health_(graphics),
     invincible_timer_(kInvincibleTime),
+    gun_experience_hud_(graphics),
     polar_star_(graphics)
 {
     damage_text_ = std::make_shared<DamageText>();
@@ -114,6 +115,7 @@ void Player::draw(Graphics& graphics) {
 void Player::drawHUD(Graphics& graphics) {
     if (spriteIsVisible()) {
         health_.draw(graphics);
+        polar_star_.drawHUD(graphics, gun_experience_hud_);
     }
 }
 
