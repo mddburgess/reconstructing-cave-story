@@ -37,6 +37,7 @@ set(SOURCE_FILES
         src/immobile_single_loop_particle.h
         src/input.cc
         src/input.h
+        src/kinematics.h
         src/main.cc
         src/map.cc
         src/map.h
