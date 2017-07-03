@@ -10,6 +10,8 @@ include_directories(cavestory ${Boost_INCLUDE_DIRS})
 include_directories(cavestory ${SDL2_INCLUDE_DIRS})
 
 set(SOURCE_FILES
+        src/accelerators.cc
+        src/accelerators.h
         src/animated_sprite.cc
         src/animated_sprite.h
         src/backdrop.cc

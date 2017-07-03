@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cmath>
+#include "accelerators.h"
 #include "animated_sprite.h"
 #include "collision_rectangle.h"
 #include "game.h"
@@ -17,17 +18,20 @@ namespace
     // Walk motion
     const units::Acceleration kWalkingAcceleration = 0.00083007812f;
     const units::Velocity kMaxSpeedX = 0.15859375f;
-    const units::Acceleration kFriction = 0.00049804687f;
+    const BidirectionalAccelerators kWalkingAccelerators(kWalkingAcceleration, kMaxSpeedX);
 
-    // Fall motion
-    const units::Acceleration kGravity = 0.00078125f;
-    const units::Velocity kMaxSpeedY = 0.2998046875f;
+    const units::Acceleration kFriction = 0.00049804687f;
+    const FrictionAccelerator kFrictionAccelerator(kFriction);
 
     // Jump motion
     const units::Velocity kJumpSpeed = 0.25f;
     const units::Velocity kShortJumpSpeed = kJumpSpeed / 1.5f;
+
     const units::Acceleration kAirAcceleration = 0.0003125f;
+    const BidirectionalAccelerators kAirAccelerators(kAirAcceleration, kMaxSpeedX);
+
     const units::Acceleration kJumpGravity = 0.0003125f;
+    const ConstantAccelerator kJumpGravityAccelerator(kJumpGravity, kTerminalVelocity);
 
     // Sprites
     const std::string kSpriteFilePath("MyChar");
@@ -335,27 +339,40 @@ Player::SpriteState Player::getSpriteState()
 void Player::updateX(units::MS elapsed_time_ms, const Map& map)
 {
     // Update velocity
-    const units::Acceleration acceleration_x = onGround()
-            ? acceleration_x_ * kWalkingAcceleration
-            : acceleration_x_ * kAirAcceleration;
-    kinematics_x_.velocity += acceleration_x * elapsed_time_ms;
-
-    if (acceleration_x_ < 0)
+    const Accelerator* accelerator;
+    if (onGround())
     {
-        kinematics_x_.velocity = std::max(kinematics_x_.velocity, -kMaxSpeedX);
+        if (acceleration_x_ == 0)
+        {
+            accelerator = &kFrictionAccelerator;
+        }
+        else if (acceleration_x_ < 0)
+        {
+            accelerator = &kWalkingAccelerators.negative;
+        }
+        else
+        {
+            accelerator = &kWalkingAccelerators.positive;
+        }
     }
-    else if (acceleration_x_ > 0)
+    else
     {
-        kinematics_x_.velocity = std::min(kinematics_x_.velocity, kMaxSpeedX);
-    }
-    else if (onGround())
-    {
-        kinematics_x_.velocity = kinematics_x_.velocity > 0.0f
-                ? std::max(0.0f, kinematics_x_.velocity - kFriction * elapsed_time_ms)
-                : std::min(0.0f, kinematics_x_.velocity + kFriction * elapsed_time_ms);
+        if (acceleration_x_ == 0)
+        {
+            accelerator = &ZeroAccelerator::kZero;
+        }
+        else if (acceleration_x_ < 0)
+        {
+            accelerator = &kAirAccelerators.negative;
+        }
+        else
+        {
+            accelerator = &kAirAccelerators.positive;
+        }
     }
 
     MapCollidable::updateX(kCollisionRectangle,
+                           *accelerator,
                            kinematics_x_,
                            kinematics_y_,
                            elapsed_time_ms,
@@ -366,11 +383,12 @@ void Player::updateY(units::MS elapsed_time_ms,
                      const Map& map)
 {
     // Update velocity
-    const units::Acceleration gravity = jump_active_ && kinematics_y_.velocity < 0.0f
-            ? kJumpGravity : kGravity;
-    kinematics_y_.velocity = std::min(kinematics_y_.velocity + gravity * elapsed_time_ms, kMaxSpeedY);
+    const Accelerator& accelerator = jump_active_ && kinematics_y_.velocity < 0.0f
+            ? kJumpGravityAccelerator
+            : ConstantAccelerator::kGravity;
 
     MapCollidable::updateY(kCollisionRectangle,
+                           accelerator,
                            kinematics_x_,
                            kinematics_y_,
                            elapsed_time_ms,
