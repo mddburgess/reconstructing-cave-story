@@ -42,6 +42,7 @@ set(SOURCE_FILES
         src/main.cc
         src/map.cc
         src/map.h
+        src/map_collidable.h
         src/number_sprite.cc
         src/number_sprite.h
         src/particle.h

@@ -86,7 +86,11 @@ namespace
     }
 }
 
-Player::Player(Graphics& graphics, units::Game x, units::Game y) :
+Player::Player(Graphics& graphics,
+               ParticleTools& particle_tools,
+               units::Game x,
+               units::Game y) :
+    particle_tools_(particle_tools),
     kinematics_x_(x, 0.0f),
     kinematics_y_(y, 0.0f),
     acceleration_x_(0),
@@ -105,18 +109,17 @@ Player::Player(Graphics& graphics, units::Game x, units::Game y) :
 }
 
 void Player::update(units::MS elapsed_time_ms,
-                    const Map& map,
-                    ParticleTools& particle_tools)
+                    const Map& map)
 {
     sprites_[getSpriteState()]->update();
 
     health_.update(elapsed_time_ms);
 
     walking_animation_.update();
-    polar_star_.updateProjectiles(elapsed_time_ms, map, particle_tools);
+    polar_star_.updateProjectiles(elapsed_time_ms, map, particle_tools_);
 
     updateX(elapsed_time_ms, map);
-    updateY(elapsed_time_ms, map, particle_tools);
+    updateY(elapsed_time_ms, map);
 }
 
 void Player::draw(Graphics& graphics)
@@ -183,14 +186,14 @@ void Player::lookHorizontal()
     intended_vertical_facing_ = HORIZONTAL;
 }
 
-void Player::startFire(ParticleTools& particle_tools)
+void Player::startFire()
 {
     polar_star_.startFire(kinematics_x_.position,
                           kinematics_y_.position,
                           horizontal_facing_,
                           vertical_facing(),
                           gun_up(),
-                          particle_tools);
+                          particle_tools_);
 }
 
 void Player::stopFire()
@@ -386,11 +389,12 @@ void Player::updateX(units::MS elapsed_time_ms, const Map& map)
         {
             kinematics_x_.position = units::tileToGame(info.col)
                                      - kCollisionRectangle.boundingBox().right();
-            kinematics_x_.velocity = 0.0f;
+            onCollision(MapCollidable::RIGHT_SIDE, true);
         }
         else
         {
             kinematics_x_.position += delta;
+            onDelta(MapCollidable::RIGHT_SIDE);
         }
 
         // Check collision in other direction
@@ -402,6 +406,7 @@ void Player::updateX(units::MS elapsed_time_ms, const Map& map)
         {
             kinematics_x_.position = units::tileToGame(info.col + 1)
                                      - kCollisionRectangle.boundingBox().left();
+            onCollision(MapCollidable::LEFT_SIDE, false);
         }
     }
     else
@@ -416,11 +421,12 @@ void Player::updateX(units::MS elapsed_time_ms, const Map& map)
         {
             kinematics_x_.position = units::tileToGame(info.col + 1)
                                      - kCollisionRectangle.boundingBox().left();
-            kinematics_x_.velocity = 0.0f;
+            onCollision(MapCollidable::LEFT_SIDE, true);
         }
         else
         {
             kinematics_x_.position += delta;
+            onDelta(MapCollidable::LEFT_SIDE);
         }
 
         // Check collision in other direction
@@ -432,13 +438,13 @@ void Player::updateX(units::MS elapsed_time_ms, const Map& map)
         {
             kinematics_x_.position = units::tileToGame(info.col)
                                      - kCollisionRectangle.boundingBox().right();
+            onCollision(MapCollidable::RIGHT_SIDE, false);
         }
     }
 }
 
 void Player::updateY(units::MS elapsed_time_ms,
-                     const Map& map,
-                     ParticleTools& particle_tools)
+                     const Map& map)
 {
     // Update velocity
     const units::Acceleration gravity = jump_active_ && kinematics_y_.velocity < 0.0f
@@ -459,13 +465,12 @@ void Player::updateY(units::MS elapsed_time_ms,
         {
             kinematics_y_.position = units::tileToGame(info.row)
                                      - kCollisionRectangle.boundingBox().bottom();
-            kinematics_y_.velocity = 0.0f;
-            on_ground_ = true;
+            onCollision(MapCollidable::BOTTOM_SIDE, true);
         }
         else
         {
             kinematics_y_.position += delta;
-            on_ground_ = false;
+            onDelta(MapCollidable::BOTTOM_SIDE);
         }
 
         // Check collision in other direction
@@ -477,11 +482,7 @@ void Player::updateY(units::MS elapsed_time_ms,
         {
             kinematics_y_.position = units::tileToGame(info.row + 1)
                                      - kCollisionRectangle.boundingBox().top();
-            particle_tools.front_system.addNewParticle(std::make_shared<HeadBumpParticle>(
-                    particle_tools.graphics,
-                    center_x(),
-                    kinematics_y_.position + kCollisionRectangle.boundingBox().top()
-            ));
+            onCollision(MapCollidable::TOP_SIDE, false);
         }
     }
     else
@@ -496,17 +497,12 @@ void Player::updateY(units::MS elapsed_time_ms,
         {
             kinematics_y_.position = units::tileToGame(info.row + 1)
                                      - kCollisionRectangle.boundingBox().top();
-            kinematics_y_.velocity = 0.0f;
-            particle_tools.front_system.addNewParticle(std::make_shared<HeadBumpParticle>(
-                    particle_tools.graphics,
-                    center_x(),
-                    kinematics_y_.position + kCollisionRectangle.boundingBox().top()
-            ));
+            onCollision(MapCollidable::TOP_SIDE, true);
         }
         else
         {
             kinematics_y_.position += delta;
-            on_ground_ = false;
+            onDelta(MapCollidable::TOP_SIDE);
         }
 
         // Check collision in other direction
@@ -517,7 +513,7 @@ void Player::updateY(units::MS elapsed_time_ms,
         if (info.collided)
         {
             kinematics_y_.position = units::tileToGame(info.row) - kCollisionRectangle.boundingBox().bottom();
-            on_ground_ = true;
+            onCollision(MapCollidable::BOTTOM_SIDE, false);
         }
     }
 }
@@ -526,4 +522,64 @@ bool Player::spriteIsVisible() const
 {
     return !(invincible_timer_.active()
               && (invincible_timer_.current_time() / kInvincibleFlashTime) % 2 == 0);
+}
+
+void Player::onCollision(MapCollidable::SideType side, bool is_delta_direction)
+{
+    switch (side)
+    {
+        case MapCollidable::TOP_SIDE:
+            if (is_delta_direction)
+            {
+                kinematics_y_.velocity = 0.0f;
+            }
+            particle_tools_.front_system.addNewParticle(std::make_shared<HeadBumpParticle>(
+                    particle_tools_.graphics,
+                    center_x(),
+                    kinematics_y_.position + kCollisionRectangle.boundingBox().top()
+            ));
+            break;
+
+        case MapCollidable::BOTTOM_SIDE:
+            on_ground_ = true;
+            if (is_delta_direction)
+            {
+                kinematics_y_.velocity = 0.0f;
+            }
+            break;
+
+        case MapCollidable::LEFT_SIDE:
+            if (is_delta_direction)
+            {
+                kinematics_x_.velocity = 0.0f;
+            }
+            break;
+
+        case MapCollidable::RIGHT_SIDE:
+            if (is_delta_direction)
+            {
+                kinematics_x_.velocity = 0.0f;
+            }
+            break;
+    }
+}
+
+void Player::onDelta(MapCollidable::SideType side)
+{
+    switch (side)
+    {
+        case MapCollidable::TOP_SIDE:
+            on_ground_ = false;
+            break;
+
+        case MapCollidable::BOTTOM_SIDE:
+            on_ground_ = false;
+            break;
+
+        case MapCollidable::LEFT_SIDE:
+            break;
+
+        case MapCollidable::RIGHT_SIDE:
+            break;
+    }
 }

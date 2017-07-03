@@ -5,6 +5,7 @@
 #include "damageable.h"
 #include "gun_experience_hud.h"
 #include "kinematics.h"
+#include "map_collidable.h"
 #include "number_sprite.h"
 #include "polar_star.h"
 #include "sprite.h"
@@ -21,11 +22,12 @@ struct Projectile;
 
 struct Player : public Damageable
 {
-    Player(Graphics& graphics, units::Game x, units::Game y);
+    Player(Graphics& graphics,
+           ParticleTools& particle_tools,
+           units::Game x,
+           units::Game y);
 
-    void update(units::MS elapsed_time_ms,
-                const Map& map,
-                ParticleTools& particle_tools);
+    void update(units::MS elapsed_time_ms, const Map& map);
     void draw(Graphics& graphics);
     void drawHUD(Graphics& graphics);
 
@@ -37,7 +39,7 @@ struct Player : public Damageable
     void lookDown();
     void lookHorizontal();
 
-    void startFire(ParticleTools& particle_tools);
+    void startFire();
     void stopFire();
 
     void startJump();
@@ -66,6 +68,11 @@ struct Player : public Damageable
     {
         return polar_star_.getProjectiles();
     }
+
+protected:
+
+    void onCollision(MapCollidable::SideType side, bool is_delta_direction);
+    void onDelta(MapCollidable::SideType side);
 
 private:
     enum MotionType
@@ -152,9 +159,7 @@ private:
     SpriteState getSpriteState();
 
     void updateX(units::MS elapsed_time_ms, const Map& map);
-    void updateY(units::MS elapsed_time_ms,
-                 const Map& map,
-                 ParticleTools& particle_tools);
+    void updateY(units::MS elapsed_time_ms, const Map& map);
 
     MotionType motionType() const;
 
@@ -178,6 +183,7 @@ private:
 
     bool spriteIsVisible() const;
 
+    ParticleTools& particle_tools_;
     Kinematics kinematics_x_, kinematics_y_;
     int acceleration_x_;
     HorizontalFacing horizontal_facing_;
