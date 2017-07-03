@@ -10,6 +10,7 @@
 #include "input.h"
 #include "map.h"
 #include "player.h"
+#include "power_dorito_pickup.h"
 
 namespace
 {
@@ -55,7 +56,10 @@ void Game::eventLoop()
     damage_texts_.addDamageable(bat_);
 
     map_.reset(Map::createTestMap(graphics));
-    std::make_unique<GunExperienceHUD>(graphics);
+
+    pickups_.add(std::make_shared<PowerDoritoPickup>(
+            graphics, 300, 200, PowerDoritoPickup::SMALL
+    ));
 
     bool running = true;
     units::MS last_update_time = SDL_GetTicks();
@@ -129,6 +133,7 @@ void Game::update(units::MS elapsed_time_ms,
 {
     Timer::updateAll(elapsed_time_ms);
     damage_texts_.update(elapsed_time_ms);
+    pickups_.update(elapsed_time_ms, *map_);
     front_particle_system_.update(elapsed_time_ms);
     entity_particle_system_.update(elapsed_time_ms);
     ParticleTools particle_tools = { front_particle_system_,
@@ -163,8 +168,9 @@ void Game::draw(Graphics& graphics)
     if (bat_) {
         bat_->draw(graphics);
     }
-    player_->draw(graphics);
     entity_particle_system_.draw(graphics);
+    pickups_.draw(graphics);
+    player_->draw(graphics);
     map_->draw(graphics);
     front_particle_system_.draw(graphics);
     damage_texts_.draw(graphics);

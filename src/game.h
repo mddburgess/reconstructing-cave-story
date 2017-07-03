@@ -4,6 +4,7 @@
 #include <memory>
 #include "damage_texts.h"
 #include "particle_system.h"
+#include "pickups.h"
 #include "units.h"
 
 struct FirstCaveBat;
@@ -30,6 +31,7 @@ private:
     std::unique_ptr<Map> map_;
     ParticleSystem front_particle_system_, entity_particle_system_;
     DamageTexts damage_texts_;
+    Pickups pickups_;
 };
 
 #endif // GAME_H_

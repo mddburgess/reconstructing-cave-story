@@ -62,6 +62,8 @@ set(SOURCE_FILES
         src/polar_star.cc
         src/polar_star.h
         src/polar_vector.h
+        src/power_dorito_pickup.cc
+        src/power_dorito_pickup.h
         src/projectile.h
         src/projectile_star_particle.cc
         src/projectile_star_particle.h
