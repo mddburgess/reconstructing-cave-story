@@ -64,26 +64,6 @@ namespace
 
     const units::MS kInvincibleFlashTime = 50;
     const units::MS kInvincibleTime = 3000;
-
-    struct CollisionInfo
-    {
-        bool collided;
-        units::Tile row, col;
-    };
-
-    CollisionInfo getWallCollisionInfo(const Map& map, const Rectangle& rectangle)
-    {
-        CollisionInfo info = { false, 0, 0 };
-        std::vector<Map::CollisionTile> tiles(map.getCollidingTiles(rectangle));
-        for (Map::CollisionTile tile : tiles) {
-            if (tile.tile_type == Map::WALL_TILE)
-            {
-                info = { true, tile.row, tile.col };
-                break;
-            }
-        }
-        return info;
-    }
 }
 
 Player::Player(Graphics& graphics,
@@ -375,72 +355,11 @@ void Player::updateX(units::MS elapsed_time_ms, const Map& map)
                 : std::min(0.0f, kinematics_x_.velocity + kFriction * elapsed_time_ms);
     }
 
-    // Calculate delta
-    const units::Game delta = kinematics_x_.velocity * elapsed_time_ms;
-    if (delta > 0.0f)
-    {
-        // Check collision in the direction of delta
-        CollisionInfo info = getWallCollisionInfo(map,
-                kCollisionRectangle.rightCollision(kinematics_x_.position,
-                                                   kinematics_y_.position,
-                                                   delta));
-        // React to collision
-        if (info.collided)
-        {
-            kinematics_x_.position = units::tileToGame(info.col)
-                                     - kCollisionRectangle.boundingBox().right();
-            onCollision(MapCollidable::RIGHT_SIDE, true);
-        }
-        else
-        {
-            kinematics_x_.position += delta;
-            onDelta(MapCollidable::RIGHT_SIDE);
-        }
-
-        // Check collision in other direction
-        info = getWallCollisionInfo(map,
-                kCollisionRectangle.leftCollision(kinematics_x_.position,
-                                                  kinematics_y_.position,
-                                                  0));
-        if (info.collided)
-        {
-            kinematics_x_.position = units::tileToGame(info.col + 1)
-                                     - kCollisionRectangle.boundingBox().left();
-            onCollision(MapCollidable::LEFT_SIDE, false);
-        }
-    }
-    else
-    {
-        // Check collision in the direction of delta
-        CollisionInfo info = getWallCollisionInfo(map,
-                kCollisionRectangle.leftCollision(kinematics_x_.position,
-                                                  kinematics_y_.position,
-                                                  delta));
-        // React to collision
-        if (info.collided)
-        {
-            kinematics_x_.position = units::tileToGame(info.col + 1)
-                                     - kCollisionRectangle.boundingBox().left();
-            onCollision(MapCollidable::LEFT_SIDE, true);
-        }
-        else
-        {
-            kinematics_x_.position += delta;
-            onDelta(MapCollidable::LEFT_SIDE);
-        }
-
-        // Check collision in other direction
-        info = getWallCollisionInfo(map,
-                kCollisionRectangle.rightCollision(kinematics_x_.position,
-                                                   kinematics_y_.position,
-                                                   0));
-        if (info.collided)
-        {
-            kinematics_x_.position = units::tileToGame(info.col)
-                                     - kCollisionRectangle.boundingBox().right();
-            onCollision(MapCollidable::RIGHT_SIDE, false);
-        }
-    }
+    MapCollidable::updateX(kCollisionRectangle,
+                           kinematics_x_,
+                           kinematics_y_,
+                           elapsed_time_ms,
+                           map);
 }
 
 void Player::updateY(units::MS elapsed_time_ms,
@@ -451,71 +370,11 @@ void Player::updateY(units::MS elapsed_time_ms,
             ? kJumpGravity : kGravity;
     kinematics_y_.velocity = std::min(kinematics_y_.velocity + gravity * elapsed_time_ms, kMaxSpeedY);
 
-    // Calculate delta
-    const units::Game delta = static_cast<units::Game>(round(kinematics_y_.velocity * elapsed_time_ms));
-    if (delta > 0.0f)
-    {
-        // Check collision in the direction of delta
-        CollisionInfo info = getWallCollisionInfo(map,
-                kCollisionRectangle.bottomCollision(kinematics_x_.position,
-                                                    kinematics_y_.position,
-                                                    delta));
-        // React to collision
-        if (info.collided)
-        {
-            kinematics_y_.position = units::tileToGame(info.row)
-                                     - kCollisionRectangle.boundingBox().bottom();
-            onCollision(MapCollidable::BOTTOM_SIDE, true);
-        }
-        else
-        {
-            kinematics_y_.position += delta;
-            onDelta(MapCollidable::BOTTOM_SIDE);
-        }
-
-        // Check collision in other direction
-        info = getWallCollisionInfo(map,
-                kCollisionRectangle.topCollision(kinematics_x_.position,
-                                                 kinematics_y_.position,
-                                                 0));
-        if (info.collided)
-        {
-            kinematics_y_.position = units::tileToGame(info.row + 1)
-                                     - kCollisionRectangle.boundingBox().top();
-            onCollision(MapCollidable::TOP_SIDE, false);
-        }
-    }
-    else
-    {
-        // Check collision in the direction of delta
-        CollisionInfo info = getWallCollisionInfo(map,
-                kCollisionRectangle.topCollision(kinematics_x_.position,
-                                                 kinematics_y_.position,
-                                                 delta));
-        // React to collision
-        if (info.collided)
-        {
-            kinematics_y_.position = units::tileToGame(info.row + 1)
-                                     - kCollisionRectangle.boundingBox().top();
-            onCollision(MapCollidable::TOP_SIDE, true);
-        }
-        else
-        {
-            kinematics_y_.position += delta;
-            onDelta(MapCollidable::TOP_SIDE);
-        }
-
-        // Check collision in other direction
-        info = getWallCollisionInfo(map,
-                kCollisionRectangle.bottomCollision(kinematics_x_.position,
-                                                    kinematics_y_.position,
-                                                    0));
-        if (info.collided)
-        {
-            kinematics_y_.position = units::tileToGame(info.row) - kCollisionRectangle.boundingBox().bottom();
-            onCollision(MapCollidable::BOTTOM_SIDE, false);
-        }
-    }
+    MapCollidable::updateY(kCollisionRectangle,
+                           kinematics_x_,
+                           kinematics_y_,
+                           elapsed_time_ms,
+                           map);
 }
 
 bool Player::spriteIsVisible() const

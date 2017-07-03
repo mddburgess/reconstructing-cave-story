@@ -20,7 +20,8 @@ struct Map;
 struct ParticleTools;
 struct Projectile;
 
-struct Player : public Damageable
+struct Player : public Damageable,
+                private MapCollidable
 {
     Player(Graphics& graphics,
            ParticleTools& particle_tools,
@@ -68,11 +69,6 @@ struct Player : public Damageable
     {
         return polar_star_.getProjectiles();
     }
-
-protected:
-
-    void onCollision(MapCollidable::SideType side, bool is_delta_direction);
-    void onDelta(MapCollidable::SideType side);
 
 private:
     enum MotionType
@@ -160,6 +156,9 @@ private:
 
     void updateX(units::MS elapsed_time_ms, const Map& map);
     void updateY(units::MS elapsed_time_ms, const Map& map);
+
+    void onCollision(MapCollidable::SideType side, bool is_delta_direction) override;
+    void onDelta(MapCollidable::SideType side) override;
 
     MotionType motionType() const;
 
