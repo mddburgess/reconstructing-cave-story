@@ -151,11 +151,6 @@ private:
     void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);
     SpriteState getSpriteState();
 
-    Rectangle leftCollision(units::Game delta) const;
-    Rectangle rightCollision(units::Game delta) const;
-    Rectangle topCollision(units::Game delta) const;
-    Rectangle bottomCollision(units::Game delta) const;
-
     void updateX(units::MS elapsed_time_ms, const Map& map);
     void updateY(units::MS elapsed_time_ms,
                  const Map& map,

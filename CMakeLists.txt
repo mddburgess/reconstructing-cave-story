@@ -14,6 +14,7 @@ set(SOURCE_FILES
         src/animated_sprite.h
         src/backdrop.cc
         src/backdrop.h
+        src/collision_rectangle.h
         src/config.cc
         src/config.h
         src/damage_text.cc
