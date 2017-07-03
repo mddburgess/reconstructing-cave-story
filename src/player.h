@@ -18,6 +18,7 @@
 struct Graphics;
 struct Map;
 struct ParticleTools;
+struct Pickup;
 struct Projectile;
 
 struct Player : public Damageable,
@@ -47,6 +48,7 @@ struct Player : public Damageable,
     void stopJump();
 
     void takeDamage(units::HP damage);
+    void collectPickup(const Pickup& pickup);
 
     Rectangle damageRectangle() const;
 

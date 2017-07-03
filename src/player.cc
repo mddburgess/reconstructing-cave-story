@@ -460,3 +460,7 @@ void Player::onDelta(MapCollidable::SideType side)
             break;
     }
 }
+
+void Player::collectPickup(const Pickup&)
+{
+}

@@ -51,6 +51,9 @@ set(SOURCE_FILES
         src/particle.h
         src/particle_system.cc
         src/particle_system.h
+        src/pickup.h
+        src/pickups.cc
+        src/pickups.h
         src/player.cc
         src/player.h
         src/player_health.cc
