@@ -3,9 +3,11 @@
 
 #include "animated_sprite.h"
 #include "kinematics.h"
+#include "map_collidable.h"
 #include "pickup.h"
 
-struct PowerDoritoPickup : Pickup
+struct PowerDoritoPickup : public Pickup,
+                           private MapCollidable
 {
     enum SizeType
     {
@@ -31,9 +33,16 @@ struct PowerDoritoPickup : Pickup
 
 private:
 
+    void onCollision(SideType side, bool is_delta_direction) override;
+
+    void onDelta(SideType side) override
+    {
+    }
+
     Kinematics kinematics_x_, kinematics_y_;
     AnimatedSprite sprite_;
     SizeType size_;
+    Timer timer_;
 };
 
 

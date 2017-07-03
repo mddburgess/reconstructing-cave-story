@@ -156,6 +156,9 @@ void Game::update(units::MS elapsed_time_ms,
             projectile->collideWithEnemy();
         }
     }
+
+    pickups_.handleCollisions(*player_);
+
     if (bat_ && bat_->damageRectangle().collidesWith(player_->damageRectangle())) {
         player_->takeDamage(bat_->contactDamage());
     }
