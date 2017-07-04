@@ -57,10 +57,6 @@ void Game::eventLoop()
 
     map_.reset(Map::createTestMap(graphics));
 
-    pickups_.add(std::make_shared<PowerDoritoPickup>(
-            graphics, 300, 200, PowerDoritoPickup::SMALL
-    ));
-
     bool running = true;
     units::MS last_update_time = SDL_GetTicks();
     while (running) {
@@ -142,6 +138,11 @@ void Game::update(units::MS elapsed_time_ms,
     player_->update(elapsed_time_ms, *map_);
     if (bat_) {
         if (!bat_->update(elapsed_time_ms, player_->center_x())) {
+            pickups_.add(
+                    std::make_shared<PowerDoritoPickup>(graphics,
+                                                        bat_->center_x(),
+                                                        bat_->center_y(),
+                                                        PowerDoritoPickup::SMALL));
             DeathCloudParticle::createRandomDeathClouds(particle_tools,
                                                         bat_->center_x(),
                                                         bat_->center_y(),

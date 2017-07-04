@@ -29,6 +29,8 @@ struct PolarStar {
               units::Game player_x,
               units::Game player_y);
 
+    void collectExperience(units::GunExperience experience);
+
     void startFire(units::Game player_x,
                    units::Game player_y,
                    HorizontalFacing horizontal_facing,
@@ -90,7 +92,9 @@ private:
     void initializeSprites(Graphics& graphics);
     void initializeSprite(Graphics& graphics, const SpriteState& sprite_state);
 
-    units::GunLevel current_level_;
+    units::GunLevel current_level() const;
+
+    units::GunExperience current_experience_;
     std::map<SpriteState, std::shared_ptr<Sprite>> sprite_map_;
     std::array<std::shared_ptr<Sprite>, units::kMaxGunLevel> horizontal_projectiles_;
     std::array<std::shared_ptr<Sprite>, units::kMaxGunLevel> vertical_projectiles_;

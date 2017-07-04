@@ -11,6 +11,7 @@
 #include "map.h"
 #include "number_sprite.h"
 #include "particle_system.h"
+#include "pickup.h"
 #include "rectangle.h"
 
 namespace
@@ -461,6 +462,11 @@ void Player::onDelta(MapCollidable::SideType side)
     }
 }
 
-void Player::collectPickup(const Pickup&)
+void Player::collectPickup(const Pickup& pickup)
 {
+    if (pickup.type() == Pickup::EXPERIENCE)
+    {
+        polar_star_.collectExperience(static_cast<units::GunExperience>(pickup.value()));
+        gun_experience_hud_.activateFlash();
+    }
 }
