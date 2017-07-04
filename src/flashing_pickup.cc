@@ -7,6 +7,10 @@ const units::Tile kHeartSourceX = 2;
 const units::Tile kHeartSourceY = 5;
 const Rectangle kHeartRectangle(5, 8, 21, 19);
 const units::HP kHeartValue = 2;
+const units::Tile kMultiHeartSourceX = 4;
+const units::Tile kMultiHeartSourceY = 5;
+const Rectangle kMultiHeartRectangle(6, 7, 26, 25);
+const units::HP kMultiHeartValue = 6;
 const units::MS kLifetime = 8000;
 const units::MS kStartPeriod = 400;
 const units::MS kEndPeriod = 225;
@@ -30,6 +34,23 @@ std::shared_ptr<Pickup> FlashingPickup::heartPickup(Graphics& graphics,
                                kHeartValue,
                                PickupType::HEALTH));
 }
+
+// static
+std::shared_ptr<Pickup> FlashingPickup::multiHeartPickup(Graphics& graphics,
+                                                         units::Game center_x,
+                                                         units::Game center_y)
+{
+    return std::shared_ptr<Pickup>(
+            new FlashingPickup(graphics,
+                               center_x,
+                               center_y,
+                               kMultiHeartSourceX,
+                               kMultiHeartSourceY,
+                               kMultiHeartRectangle,
+                               kMultiHeartValue,
+                               PickupType::HEALTH));
+}
+
 
 FlashingPickup::FlashingPickup(Graphics& graphics,
                                units::Game center_x,
@@ -113,4 +134,3 @@ void FlashingPickup::draw(Graphics& graphics)
         }
     }
 }
-

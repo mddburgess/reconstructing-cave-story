@@ -464,9 +464,18 @@ void Player::onDelta(MapCollidable::SideType side)
 
 void Player::collectPickup(const Pickup& pickup)
 {
-    if (pickup.type() == Pickup::EXPERIENCE)
+    switch (pickup.type())
     {
-        polar_star_.collectExperience(static_cast<units::GunExperience>(pickup.value()));
-        gun_experience_hud_.activateFlash();
+        case Pickup::EXPERIENCE:
+            polar_star_.collectExperience(pickup.value());
+            gun_experience_hud_.activateFlash();
+            break;
+
+        case Pickup::HEALTH:
+            health_.addHealth(pickup.value());
+            break;
+
+        default:
+            break;
     }
 }

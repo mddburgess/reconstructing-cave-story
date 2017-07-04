@@ -141,8 +141,11 @@ private:
         void update(units::MS elapsed_time);
         void draw(Graphics& graphics);
         bool takeDamage(units::HP damage);
+        void addHealth(units::HP health);
 
     private:
+        void resetFillSprites();
+
         units::HP damage_;
         Timer damage_timer_;
         units::HP max_health_;

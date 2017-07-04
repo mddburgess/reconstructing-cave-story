@@ -26,6 +26,10 @@ struct FlashingPickup : public Pickup
                                                units::Game center_x,
                                                units::Game center_y);
 
+    static std::shared_ptr<Pickup> multiHeartPickup(Graphics& graphics,
+                                                    units::Game center_x,
+                                                    units::Game center_y);
+
 private:
 
     FlashingPickup(Graphics& graphics,
