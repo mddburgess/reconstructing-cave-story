@@ -33,9 +33,9 @@ struct PowerDoritoPickup : public Pickup,
 
 private:
 
-    void onCollision(SideType side, bool is_delta_direction) override;
+    void onCollision(sides::SideType side, bool is_delta_direction) override;
 
-    void onDelta(SideType side) override
+    void onDelta(sides::SideType side) override
     {
     }
 

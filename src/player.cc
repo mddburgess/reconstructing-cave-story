@@ -409,11 +409,11 @@ bool Player::spriteIsVisible() const
               && (invincible_timer_.current_time() / kInvincibleFlashTime) % 2 == 0);
 }
 
-void Player::onCollision(MapCollidable::SideType side, bool is_delta_direction)
+void Player::onCollision(sides::SideType side, bool is_delta_direction)
 {
     switch (side)
     {
-        case MapCollidable::TOP_SIDE:
+        case sides::TOP_SIDE:
             if (is_delta_direction)
             {
                 kinematics_y_.velocity = 0.0f;
@@ -425,7 +425,7 @@ void Player::onCollision(MapCollidable::SideType side, bool is_delta_direction)
             ));
             break;
 
-        case MapCollidable::BOTTOM_SIDE:
+        case sides::BOTTOM_SIDE:
             on_ground_ = true;
             if (is_delta_direction)
             {
@@ -433,14 +433,8 @@ void Player::onCollision(MapCollidable::SideType side, bool is_delta_direction)
             }
             break;
 
-        case MapCollidable::LEFT_SIDE:
-            if (is_delta_direction)
-            {
-                kinematics_x_.velocity = 0.0f;
-            }
-            break;
-
-        case MapCollidable::RIGHT_SIDE:
+        case sides::LEFT_SIDE:
+        case sides::RIGHT_SIDE:
             if (is_delta_direction)
             {
                 kinematics_x_.velocity = 0.0f;
@@ -449,22 +443,19 @@ void Player::onCollision(MapCollidable::SideType side, bool is_delta_direction)
     }
 }
 
-void Player::onDelta(MapCollidable::SideType side)
+void Player::onDelta(sides::SideType side)
 {
     switch (side)
     {
-        case MapCollidable::TOP_SIDE:
+        case sides::TOP_SIDE:
             on_ground_ = false;
             break;
 
-        case MapCollidable::BOTTOM_SIDE:
+        case sides::BOTTOM_SIDE:
             on_ground_ = false;
             break;
 
-        case MapCollidable::LEFT_SIDE:
-            break;
-
-        case MapCollidable::RIGHT_SIDE:
+        default:
             break;
     }
 }

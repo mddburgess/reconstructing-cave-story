@@ -89,16 +89,16 @@ int PowerDoritoPickup::value() const
     return kValues[size_];
 }
 
-void PowerDoritoPickup::onCollision(MapCollidable::SideType side,
+void PowerDoritoPickup::onCollision(sides::SideType side,
                                     bool is_delta_direction)
 {
     switch (side)
     {
-        case TOP_SIDE:
+        case sides::TOP_SIDE:
             kinematics_y_.velocity = 0.0f;
             break;
 
-        case BOTTOM_SIDE:
+        case sides::BOTTOM_SIDE:
             kinematics_y_.velocity = -kBounceSpeed;
             break;
 

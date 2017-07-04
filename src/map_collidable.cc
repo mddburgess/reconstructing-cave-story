@@ -16,10 +16,10 @@ namespace
     CollisionInfo getWallCollisionInfo(const Map& map, const Rectangle& rectangle)
     {
         CollisionInfo info = { false, 0, 0 };
-        std::vector<Map::CollisionTile> tiles(map.getCollidingTiles(rectangle));
-        for (Map::CollisionTile tile : tiles)
+        std::vector<CollisionTile> tiles(map.getCollidingTiles(rectangle));
+        for (auto tile : tiles)
         {
-            if (tile.tile_type == Map::WALL_TILE)
+            if (tile.tile_type == tiles::WALL_TILE)
             {
                 info = { true, tile.row, tile.col };
                 break;
@@ -54,12 +54,12 @@ void MapCollidable::updateX(const CollisionRectangle& collision_rectangle,
         {
             kinematics_x.position = units::tileToGame(info.col)
                                      - collision_rectangle.boundingBox().right();
-            onCollision(MapCollidable::RIGHT_SIDE, true);
+            onCollision(sides::RIGHT_SIDE, true);
         }
         else
         {
             kinematics_x.position += delta;
-            onDelta(MapCollidable::RIGHT_SIDE);
+            onDelta(sides::RIGHT_SIDE);
         }
 
         // Check collision in other direction
@@ -73,7 +73,7 @@ void MapCollidable::updateX(const CollisionRectangle& collision_rectangle,
         {
             kinematics_x.position = units::tileToGame(info.col + 1)
                                      - collision_rectangle.boundingBox().left();
-            onCollision(MapCollidable::LEFT_SIDE, false);
+            onCollision(sides::LEFT_SIDE, false);
         }
     }
     else
@@ -90,12 +90,12 @@ void MapCollidable::updateX(const CollisionRectangle& collision_rectangle,
         {
             kinematics_x.position = units::tileToGame(info.col + 1)
                                      - collision_rectangle.boundingBox().left();
-            onCollision(MapCollidable::LEFT_SIDE, true);
+            onCollision(sides::LEFT_SIDE, true);
         }
         else
         {
             kinematics_x.position += delta;
-            onDelta(MapCollidable::LEFT_SIDE);
+            onDelta(sides::LEFT_SIDE);
         }
 
         // Check collision in other direction
@@ -109,7 +109,7 @@ void MapCollidable::updateX(const CollisionRectangle& collision_rectangle,
         {
             kinematics_x.position = units::tileToGame(info.col)
                                      - collision_rectangle.boundingBox().right();
-            onCollision(MapCollidable::RIGHT_SIDE, false);
+            onCollision(sides::RIGHT_SIDE, false);
         }
     }
 
@@ -140,12 +140,12 @@ void MapCollidable::updateY(const CollisionRectangle& collision_rectangle,
         {
             kinematics_y.position = units::tileToGame(info.row)
                                      - collision_rectangle.boundingBox().bottom();
-            onCollision(MapCollidable::BOTTOM_SIDE, true);
+            onCollision(sides::BOTTOM_SIDE, true);
         }
         else
         {
             kinematics_y.position += delta;
-            onDelta(MapCollidable::BOTTOM_SIDE);
+            onDelta(sides::BOTTOM_SIDE);
         }
 
         // Check collision in other direction
@@ -159,7 +159,7 @@ void MapCollidable::updateY(const CollisionRectangle& collision_rectangle,
         {
             kinematics_y.position = units::tileToGame(info.row + 1)
                                      - collision_rectangle.boundingBox().top();
-            onCollision(MapCollidable::TOP_SIDE, false);
+            onCollision(sides::TOP_SIDE, false);
         }
     }
     else
@@ -176,12 +176,12 @@ void MapCollidable::updateY(const CollisionRectangle& collision_rectangle,
         {
             kinematics_y.position = units::tileToGame(info.row + 1)
                                      - collision_rectangle.boundingBox().top();
-            onCollision(MapCollidable::TOP_SIDE, true);
+            onCollision(sides::TOP_SIDE, true);
         }
         else
         {
             kinematics_y.position += delta;
-            onDelta(MapCollidable::TOP_SIDE);
+            onDelta(sides::TOP_SIDE);
         }
 
         // Check collision in other direction
@@ -194,7 +194,7 @@ void MapCollidable::updateY(const CollisionRectangle& collision_rectangle,
         if (info.collided)
         {
             kinematics_y.position = units::tileToGame(info.row) - collision_rectangle.boundingBox().bottom();
-            onCollision(MapCollidable::BOTTOM_SIDE, false);
+            onCollision(sides::BOTTOM_SIDE, false);
         }
     }
 

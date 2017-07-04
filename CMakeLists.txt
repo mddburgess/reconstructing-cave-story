@@ -17,6 +17,7 @@ set(SOURCE_FILES
         src/backdrop.cc
         src/backdrop.h
         src/collision_rectangle.h
+        src/collision_tile.h
         src/composite_collision_rectangle.h
         src/config.cc
         src/config.h
@@ -72,11 +73,13 @@ set(SOURCE_FILES
         src/projectile_wall_particle.cc
         src/projectile_wall_particle.h
         src/rectangle.h
+        src/side_type.h
         src/simple_collision_rectangle.cc
         src/simple_collision_rectangle.h
         src/sprite.cc
         src/sprite.h
         src/sprite_state.h
+        src/tile_type.h
         src/timer.cc
         src/timer.h
         src/units.h

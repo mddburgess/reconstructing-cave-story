@@ -4,26 +4,16 @@
 #include <vector>
 #include <memory>
 #include "backdrop.h"
+#include "collision_tile.h"
+#include "tile_type.h"
 #include "units.h"
 
 struct Graphics;
 struct Sprite;
 struct Rectangle;
 
-struct Map {
-    enum TileType {
-        AIR_TILE,
-        WALL_TILE
-    };
-    struct CollisionTile {
-        CollisionTile(units::Tile row, units::Tile col, TileType tile_type)
-            : row(row),
-              col(col),
-              tile_type(tile_type) {}
-        units::Tile row, col;
-        TileType tile_type;
-    };
-
+struct Map
+{
     static Map* createTestMap(Graphics& graphics);
 
     std::vector<CollisionTile> getCollidingTiles(const Rectangle& rectangle) const;
@@ -32,15 +22,20 @@ struct Map {
     void draw(Graphics& graphics) const;
 
 private:
-    struct Tile {
-        Tile(TileType tile_type = AIR_TILE,
-             std::shared_ptr<Sprite> sprite = std::shared_ptr<Sprite>())
-            : tile_type(tile_type),
-              sprite(sprite) {}
 
-        TileType tile_type;
+    struct Tile
+    {
+        Tile(tiles::TileType tile_type = tiles::AIR_TILE,
+             std::shared_ptr<Sprite> sprite = std::shared_ptr<Sprite>()) :
+            tile_type(tile_type),
+            sprite(sprite)
+        {
+        }
+
+        tiles::TileType tile_type;
         std::shared_ptr<Sprite> sprite;
     };
+
     std::unique_ptr<Backdrop> backdrop_;
     std::vector<std::vector<std::shared_ptr<Sprite>>> background_tiles_;
     std::vector<std::vector<Tile>> tiles_;
