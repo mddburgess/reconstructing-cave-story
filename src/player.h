@@ -1,8 +1,8 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include "damage_text.h"
 #include "damageable.h"
+#include "floating_number.h"
 #include "gun_experience_hud.h"
 #include "kinematics.h"
 #include "map_collidable.h"
@@ -62,7 +62,7 @@ struct Player : public Damageable,
         return kinematics_y_.position + units::kHalfTile;
     }
 
-    std::shared_ptr<DamageText> get_damage_text() override
+    std::shared_ptr<FloatingNumber> get_damage_text() override
     {
         return damage_text_;
     }
@@ -197,7 +197,8 @@ private:
     bool interacting_;
     Health health_;
     Timer invincible_timer_;
-    std::shared_ptr<DamageText> damage_text_;
+    std::shared_ptr<FloatingNumber> damage_text_;
+    FloatingNumber experience_text_;
     WalkingAnimation walking_animation_;
     GunExperienceHUD gun_experience_hud_;
     PolarStar polar_star_;

@@ -86,10 +86,11 @@ Player::Player(Graphics& graphics,
     interacting_(false),
     health_(graphics),
     invincible_timer_(kInvincibleTime),
+    experience_text_(FloatingNumber::EXPERIENCE),
     gun_experience_hud_(graphics),
     polar_star_(graphics)
 {
-    damage_text_ = std::make_shared<DamageText>();
+    damage_text_ = std::make_shared<FloatingNumber>(FloatingNumber::DAMAGE);
     initializeSprites(graphics);
 }
 
@@ -105,6 +106,9 @@ void Player::update(units::MS elapsed_time_ms,
 
     updateX(elapsed_time_ms, map);
     updateY(elapsed_time_ms, map);
+
+    experience_text_.update(elapsed_time_ms);
+    experience_text_.setPosition(center_x(), center_y());
 }
 
 void Player::draw(Graphics& graphics)
@@ -118,6 +122,7 @@ void Player::draw(Graphics& graphics)
 
 void Player::drawHUD(Graphics& graphics)
 {
+    experience_text_.draw(graphics);
     if (spriteIsVisible()) {
         health_.draw(graphics);
         polar_star_.drawHUD(graphics, gun_experience_hud_);
@@ -207,7 +212,9 @@ void Player::takeDamage(units::HP damage)
         return;
     }
     health_.takeDamage(damage);
-    damage_text_->setDamage(damage);
+    damage_text_->addValue(damage);
+
+    polar_star_.damageExperience(damage * 2);
 
     kinematics_y_.velocity = std::min(kinematics_y_.velocity, -kShortJumpSpeed);
     invincible_timer_.reset();
@@ -468,6 +475,7 @@ void Player::collectPickup(const Pickup& pickup)
     {
         case Pickup::EXPERIENCE:
             polar_star_.collectExperience(pickup.value());
+            experience_text_.addValue(pickup.value());
             gun_experience_hud_.activateFlash();
             break;
 

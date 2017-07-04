@@ -235,9 +235,13 @@ void PolarStar::drawHUD(Graphics& graphics, GunExperienceHUD& hud) {
 
 void PolarStar::collectExperience(units::GunExperience experience)
 {
-    current_experience_ += experience;
-    current_experience_ = std::min(kExperiences[units::kMaxGunLevel],
-                                   current_experience_);
+    current_experience_ = std::min(current_experience_ + experience,
+                                   kExperiences[units::kMaxGunLevel]);
+}
+
+void PolarStar::damageExperience(units::GunExperience experience)
+{
+    current_experience_ = std::max(current_experience_ - experience, 0);
 }
 
 units::GunLevel PolarStar::current_level() const

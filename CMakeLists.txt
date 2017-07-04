@@ -20,8 +20,6 @@ set(SOURCE_FILES
         src/composite_collision_rectangle.h
         src/config.cc
         src/config.h
-        src/damage_text.cc
-        src/damage_text.h
         src/damage_texts.cc
         src/damage_texts.h
         src/damageable.h
@@ -31,6 +29,8 @@ set(SOURCE_FILES
         src/first_cave_bat.h
         src/flashing_pickup.cc
         src/flashing_pickup.h
+        src/floating_number.cc
+        src/floating_number.h
         src/game.cc
         src/game.h
         src/graphics.cc

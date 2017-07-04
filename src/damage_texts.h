@@ -5,17 +5,19 @@
 #include <memory>
 #include "units.h"
 
-struct DamageText;
+struct FloatingNumber;
 struct Damageable;
 struct Graphics;
 
-struct DamageTexts {
+struct DamageTexts
+{
     void addDamageable(std::shared_ptr<Damageable> damageable);
     void update(units::MS elapsed_time);
     void draw(Graphics& graphics);
 
 private:
-    typedef std::map<std::shared_ptr<DamageText>, std::weak_ptr<Damageable>> DamageTextMap;
+
+    typedef std::map<std::shared_ptr<FloatingNumber>, std::weak_ptr<Damageable>> DamageTextMap;
 
     DamageTextMap damage_text_map_;
 };
