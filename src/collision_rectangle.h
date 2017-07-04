@@ -7,6 +7,20 @@ struct CollisionRectangle
 {
     virtual Rectangle boundingBox() const = 0;
 
+    Rectangle collision(sides::SideType side,
+                        units::Game x,
+                        units::Game y,
+                        units::Game delta) const
+    {
+        switch (side)
+        {
+            case sides::LEFT_SIDE:   return leftCollision(x, y, delta);
+            case sides::RIGHT_SIDE:  return rightCollision(x, y, delta);
+            case sides::TOP_SIDE:    return topCollision(x, y, delta);
+            case sides::BOTTOM_SIDE: return bottomCollision(x, y, delta);
+        }
+    }
+
     virtual Rectangle leftCollision(units::Game x,
                                     units::Game y,
                                     units::Game delta) const = 0;

@@ -36,91 +36,14 @@ void MapCollidable::updateX(const CollisionRectangle& collision_rectangle,
                             units::MS elapsed_time_ms,
                             const Map& map)
 {
-    accelerator.updateVelocity(kinematics_x, elapsed_time_ms);
-
-    // Calculate delta
-    const units::Game delta = kinematics_x.velocity * elapsed_time_ms;
-    if (delta > 0.0f)
-    {
-        // Check collision in the direction of delta
-        const auto direction = sides::RIGHT_SIDE;
-        auto maybe_position = testMapCollision(
-                map,
-                collision_rectangle.rightCollision(
-                        kinematics_x.position,
-                        kinematics_y.position,
-                        delta),
-                direction);
-
-        // React to collision
-        if (maybe_position)
-        {
-            kinematics_x.position = *maybe_position - collision_rectangle.boundingBox().right();
-            onCollision(direction, true);
-        }
-        else
-        {
-            kinematics_x.position += delta;
-            onDelta(direction);
-        }
-
-        // Check collision in other direction
-        const auto opposite_direction = sides::opposite_side(direction);
-        maybe_position = testMapCollision(
-                map,
-                collision_rectangle.leftCollision(
-                        kinematics_x.position,
-                        kinematics_y.position,
-                        0),
-                opposite_direction);
-
-        if (maybe_position)
-        {
-            kinematics_x.position = *maybe_position - collision_rectangle.boundingBox().left();
-            onCollision(opposite_direction, false);
-        }
-    }
-    else
-    {
-        // Check collision in the direction of delta
-        const auto direction = sides::LEFT_SIDE;
-        auto maybe_position = testMapCollision(
-                map,
-                collision_rectangle.leftCollision(
-                        kinematics_x.position,
-                        kinematics_y.position,
-                        delta),
-                direction);
-
-        // React to collision
-        if (maybe_position)
-        {
-            kinematics_x.position = *maybe_position - collision_rectangle.boundingBox().left();
-            onCollision(direction, true);
-        }
-        else
-        {
-            kinematics_x.position += delta;
-            onDelta(direction);
-        }
-
-        // Check collision in other direction
-        const auto opposite_direction = sides::opposite_side(direction);
-        maybe_position = testMapCollision(
-                map,
-                collision_rectangle.rightCollision(
-                        kinematics_x.position,
-                        kinematics_y.position,
-                        0),
-                opposite_direction);
-
-        if (maybe_position)
-        {
-            kinematics_x.position = *maybe_position - collision_rectangle.boundingBox().right();
-            onCollision(opposite_direction, false);
-        }
-    }
-
+    update(collision_rectangle,
+           accelerator,
+           kinematics_x,
+           kinematics_y,
+           elapsed_time_ms,
+           map,
+           kinematics_x,
+           X_AXIS);
 }
 
 void MapCollidable::updateY(const CollisionRectangle& collision_rectangle,
@@ -130,17 +53,39 @@ void MapCollidable::updateY(const CollisionRectangle& collision_rectangle,
                             units::MS elapsed_time_ms,
                             const Map& map)
 {
-    accelerator.updateVelocity(kinematics_y, elapsed_time_ms);
+    update(collision_rectangle,
+           accelerator,
+           kinematics_x,
+           kinematics_y,
+           elapsed_time_ms,
+           map,
+           kinematics_y,
+           Y_AXIS);
+}
 
-    // Calculate delta
-    const units::Game delta = static_cast<units::Game>(round(kinematics_y.velocity * elapsed_time_ms));
-    if (delta > 0.0f)
+void MapCollidable::update(const CollisionRectangle& collision_rectangle,
+                           const Accelerator& accelerator,
+                           const Kinematics& kinematics_x,
+                           const Kinematics& kinematics_y,
+                           units::MS elapsed_time_ms,
+                           const Map& map,
+                           Kinematics& kinematics,
+                           MapCollidable::AxisType axis)
+{
+    accelerator.updateVelocity(kinematics, elapsed_time_ms);
+
+    const units::Game delta = kinematics.velocity * elapsed_time_ms;
+
+    // Check collision in the direction of delta
+    const auto direction = axis == X_AXIS
+            ? (delta > 0.0f ? sides::RIGHT_SIDE : sides::LEFT_SIDE)
+            : (delta > 0.0f ? sides::BOTTOM_SIDE : sides::TOP_SIDE);
+
     {
-        // Check collision in the direction of delta
-        const auto direction = sides::BOTTOM_SIDE;
         auto maybe_position = testMapCollision(
                 map,
-                collision_rectangle.bottomCollision(
+                collision_rectangle.collision(
+                        direction,
                         kinematics_x.position,
                         kinematics_y.position,
                         delta),
@@ -149,70 +94,32 @@ void MapCollidable::updateY(const CollisionRectangle& collision_rectangle,
         // React to collision
         if (maybe_position)
         {
-            kinematics_y.position = *maybe_position - collision_rectangle.boundingBox().bottom();
+            kinematics.position = *maybe_position -
+                    collision_rectangle.boundingBox().side(direction);
             onCollision(direction, true);
-        }
-        else
+        } else
         {
-            kinematics_y.position += delta;
+            kinematics.position += delta;
             onDelta(direction);
         }
-
-        // Check collision in other direction
-        const auto opposite_direction = sides::opposite_side(direction);
-        maybe_position = testMapCollision(
-                map,
-                collision_rectangle.topCollision(
-                        kinematics_x.position,
-                        kinematics_y.position,
-                        0),
-                opposite_direction);
-
-        if (maybe_position)
-        {
-            kinematics_y.position = *maybe_position - collision_rectangle.boundingBox().top();
-            onCollision(opposite_direction, false);
-        }
     }
-    else
+
+    // Check collision in other direction
+    const auto opposite_direction = sides::opposite_side(direction);
+
+    auto maybe_position = testMapCollision(
+            map,
+            collision_rectangle.collision(
+                    opposite_direction,
+                    kinematics_x.position,
+                    kinematics_y.position,
+                    0),
+            opposite_direction);
+
+    if (maybe_position)
     {
-        // Check collision in the direction of delta
-        const auto direction = sides::TOP_SIDE;
-        auto maybe_position = testMapCollision(
-                map,
-                collision_rectangle.topCollision(
-                        kinematics_x.position,
-                        kinematics_y.position,
-                        delta),
-                direction);
-
-        // React to collision
-        if (maybe_position)
-        {
-            kinematics_y.position = *maybe_position - collision_rectangle.boundingBox().top();
-            onCollision(direction, true);
-        }
-        else
-        {
-            kinematics_y.position += delta;
-            onDelta(direction);
-        }
-
-        // Check collision in other direction
-        const auto opposite_direction = sides::opposite_side(direction);
-        maybe_position = testMapCollision(
-                map,
-                collision_rectangle.bottomCollision(
-                        kinematics_x.position,
-                        kinematics_y.position,
-                        0),
-                opposite_direction);
-
-        if (maybe_position)
-        {
-            kinematics_y.position = *maybe_position - collision_rectangle.boundingBox().bottom();
-            onCollision(opposite_direction, false);
-        }
+        kinematics.position = *maybe_position -
+                collision_rectangle.boundingBox().side(opposite_direction);
+        onCollision(opposite_direction, false);
     }
-
 }

@@ -1,6 +1,7 @@
 #ifndef RECTANGLE_H_
 #define RECTANGLE_H_
 
+#include "side_type.h"
 #include "units.h"
 
 struct Rectangle
@@ -21,6 +22,17 @@ struct Rectangle
     units::Game center_y() const
     {
         return y_ + height_ / 2;
+    }
+
+    units::Game side(sides::SideType side) const
+    {
+        switch (side)
+        {
+            case sides::LEFT_SIDE:   return left();
+            case sides::RIGHT_SIDE:  return right();
+            case sides::TOP_SIDE:    return top();
+            case sides::BOTTOM_SIDE: return bottom();
+        }
     }
 
     units::Game left() const
