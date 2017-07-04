@@ -17,6 +17,7 @@ set(SOURCE_FILES
         src/backdrop.cc
         src/backdrop.h
         src/collision_rectangle.h
+        src/collision_tile.cc
         src/collision_tile.h
         src/composite_collision_rectangle.h
         src/config.cc
