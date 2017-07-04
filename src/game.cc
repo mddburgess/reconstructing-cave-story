@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include "death_cloud_particle.h"
 #include "first_cave_bat.h"
+#include "flashing_pickup.h"
 #include "graphics.h"
 #include "gun_experience_hud.h"
 #include "input.h"
@@ -138,15 +139,12 @@ void Game::update(units::MS elapsed_time_ms,
     player_->update(elapsed_time_ms, *map_);
     if (bat_) {
         if (!bat_->update(elapsed_time_ms, player_->center_x())) {
-            pickups_.add(
-                    std::make_shared<PowerDoritoPickup>(graphics,
-                                                        bat_->center_x(),
-                                                        bat_->center_y(),
-                                                        PowerDoritoPickup::SMALL));
             DeathCloudParticle::createRandomDeathClouds(particle_tools,
                                                         bat_->center_x(),
                                                         bat_->center_y(),
                                                         3);
+            pickups_.add(FlashingPickup::heartPickup(
+                    graphics, bat_->center_x(), bat_->center_y()));
             bat_.reset();
         };
     }

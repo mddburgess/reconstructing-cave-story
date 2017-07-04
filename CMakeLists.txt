@@ -29,6 +29,8 @@ set(SOURCE_FILES
         src/death_cloud_particle.h
         src/first_cave_bat.cc
         src/first_cave_bat.h
+        src/flashing_pickup.cc
+        src/flashing_pickup.h
         src/game.cc
         src/game.h
         src/graphics.cc
