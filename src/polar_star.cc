@@ -314,13 +314,13 @@ bool PolarStar::Projectile::update(units::MS elapsed_time,
                                    const Map& map,
                                    ParticleTools& particle_tools)
 {
+    const auto direction = sides::from_facing(horizontal_direction_,
+                                              vertical_direction_);
     offset_ += kProjectileSpeed * elapsed_time;
     std::vector<CollisionTile> colliding_tiles(
-            map.getCollidingTiles(collisionRectangle()));
+            map.getCollidingTiles(collisionRectangle(), direction));
     for (auto tile : colliding_tiles)
     {
-        const auto direction = sides::from_facing(horizontal_direction_,
-                                                  vertical_direction_);
         const auto side = sides::opposite_side(direction);
         const auto position = sides::vertical(side) ? getX() : getY();
         const auto maybe_position = tile.testCollision(side, position);

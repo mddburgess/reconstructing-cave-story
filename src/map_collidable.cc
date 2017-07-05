@@ -11,7 +11,7 @@ namespace
                                                   const Rectangle& rectangle,
                                                   sides::SideType direction)
     {
-        std::vector<CollisionTile> tiles(map.getCollidingTiles(rectangle));
+        std::vector<CollisionTile> tiles(map.getCollidingTiles(rectangle, direction));
         for (auto tile : tiles)
         {
             const auto side = sides::opposite_side(direction);

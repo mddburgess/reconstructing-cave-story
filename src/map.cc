@@ -166,21 +166,45 @@ Map* Map::createTestMap(Graphics& graphics)
     return map;
 }
 
-std::vector<CollisionTile> Map::getCollidingTiles(const Rectangle& rectangle) const
+std::vector<CollisionTile> Map::getCollidingTiles(const Rectangle& rectangle,
+                                                  sides::SideType direction) const
 {
-    const units::Tile first_row = units::gameToTile(rectangle.top());
-    const units::Tile last_row = units::gameToTile(rectangle.bottom());
-    const units::Tile first_col = units::gameToTile(rectangle.left());
-    const units::Tile last_col = units::gameToTile(rectangle.right());
+    const units::Tile first_primary = units::gameToTile(
+            rectangle.side(sides::opposite_side(direction)));
+    const units::Tile last_primary = units::gameToTile(
+            rectangle.side(direction));
+    const int primary_incr =
+            direction == sides::BOTTOM_SIDE || direction == sides::RIGHT_SIDE
+                    ? 1 : -1;
+
+    const bool horizontal = sides::horizontal(direction);
+    const units::Tile s_min = units::gameToTile(
+            horizontal ? rectangle.top() : rectangle.left());
+    const units::Tile s_mid = units::gameToTile(
+            horizontal ? rectangle.center_y() : rectangle.center_x());
+    const units::Tile s_max = units::gameToTile(
+            horizontal ? rectangle.bottom() : rectangle.right());
+    const bool s_positive = (s_mid - s_min) < (s_max - s_mid);
+
+    const units::Tile first_secondary = s_positive ? s_min : s_max;
+    const units::Tile last_secondary = s_positive ? s_max : s_min;
+    const int secondary_incr = s_positive ? 1 : -1;
+
+
     std::vector<CollisionTile> collision_tiles;
 
-    for (units::Tile row = first_row; row <= last_row; ++row)
+    for (auto primary = first_primary;
+         primary != last_primary + primary_incr;
+         primary += primary_incr)
     {
-        for (units::Tile col = first_col; col <= last_col; ++col)
+        for (auto secondary = first_secondary;
+             secondary != last_secondary + secondary_incr;
+             secondary += secondary_incr)
         {
-            collision_tiles.push_back(CollisionTile(row,
-                                                    col,
-                                                    tiles_[row][col].tile_type));
+            const auto row = !horizontal ? primary : secondary;
+            const auto col = horizontal ? primary : secondary;
+            collision_tiles.push_back(CollisionTile(
+                    row, col, tiles_[row][col].tile_type));
         }
     }
 
