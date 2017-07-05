@@ -51,6 +51,16 @@ namespace sides
         }
         return RIGHT_SIDE;
     }
+
+    inline bool is_max(SideType side)
+    {
+        return side == RIGHT_SIDE || side == BOTTOM_SIDE;
+    }
+
+    inline bool is_min(SideType side)
+    {
+        return !is_max(side);
+    }
 }
 
 #endif // SIDE_TYPE_H_

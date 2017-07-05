@@ -316,27 +316,37 @@ bool PolarStar::Projectile::update(units::MS elapsed_time,
 {
     const auto direction = sides::from_facing(horizontal_direction_,
                                               vertical_direction_);
+    const auto rectangle = collisionRectangle();
+
     offset_ += kProjectileSpeed * elapsed_time;
     std::vector<CollisionTile> colliding_tiles(
-            map.getCollidingTiles(collisionRectangle(), direction));
+            map.getCollidingTiles(rectangle, direction));
     for (auto tile : colliding_tiles)
     {
         const auto side = sides::opposite_side(direction);
-        const auto position = sides::vertical(side) ? getX() : getY();
-        const auto maybe_position = tile.testCollision(side, position);
+        const auto perpendicular_position = sides::vertical(side)
+                ? rectangle.center_x() : rectangle.center_y();
+        const auto leading_position = rectangle.side(direction);
+        const auto should_test_slopes = true;
+
+        const auto maybe_position = tile.testCollision(
+                side,
+                perpendicular_position,
+                leading_position,
+                should_test_slopes);
 
         if (maybe_position)
         {
-            const auto particle_x = sides::vertical(side)
-                    ? position
-                    : *maybe_position - units::kHalfTile;
-            const auto particle_y = sides::vertical(side)
-                    ? *maybe_position - units::kHalfTile
-                    : position;
+            const auto collision_x = sides::vertical(side)
+                    ? perpendicular_position : *maybe_position;
+            const auto collision_y = sides::vertical(side)
+                    ? *maybe_position : perpendicular_position;
 
             particle_tools.front_system.addNewParticle(
                     std::make_shared<ProjectileWallParticle>(
-                            particle_tools.graphics, particle_x, particle_y));
+                            particle_tools.graphics,
+                            collision_x - units::kHalfTile,
+                            collision_y - units::kHalfTile));
             return false;
         }
     }

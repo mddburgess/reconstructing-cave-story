@@ -15,11 +15,18 @@ namespace
         for (auto tile : tiles)
         {
             const auto side = sides::opposite_side(direction);
-            const auto position = sides::vertical(side)
+            const auto perpendicular_position = sides::vertical(side)
                     ? rectangle.center_x()
                     : rectangle.center_y();
+            const auto leading_position = rectangle.side(direction);
+            const auto should_test_slopes = sides::vertical(side);
 
-            const auto maybe_position = tile.testCollision(side, position);
+            const auto maybe_position = tile.testCollision(
+                    side,
+                    perpendicular_position,
+                    leading_position,
+                    should_test_slopes);
+
             if (maybe_position)
             {
                 return maybe_position;

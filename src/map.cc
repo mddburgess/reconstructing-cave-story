@@ -173,9 +173,7 @@ std::vector<CollisionTile> Map::getCollidingTiles(const Rectangle& rectangle,
             rectangle.side(sides::opposite_side(direction)));
     const units::Tile last_primary = units::gameToTile(
             rectangle.side(direction));
-    const int primary_incr =
-            direction == sides::BOTTOM_SIDE || direction == sides::RIGHT_SIDE
-                    ? 1 : -1;
+    const int primary_incr = sides::is_max(direction) ? 1 : -1;
 
     const bool horizontal = sides::horizontal(direction);
     const units::Tile s_min = units::gameToTile(

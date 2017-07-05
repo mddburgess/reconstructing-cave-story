@@ -417,12 +417,12 @@ void Player::onCollision(sides::SideType side, bool is_delta_direction)
             if (is_delta_direction)
             {
                 kinematics_y_.velocity = 0.0f;
+                particle_tools_.front_system.addNewParticle(std::make_shared<HeadBumpParticle>(
+                        particle_tools_.graphics,
+                        center_x(),
+                        kinematics_y_.position + kCollisionRectangle.boundingBox().top()
+                ));
             }
-            particle_tools_.front_system.addNewParticle(std::make_shared<HeadBumpParticle>(
-                    particle_tools_.graphics,
-                    center_x(),
-                    kinematics_y_.position + kCollisionRectangle.boundingBox().top()
-            ));
             break;
 
         case sides::BOTTOM_SIDE:
