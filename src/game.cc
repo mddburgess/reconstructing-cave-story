@@ -58,7 +58,6 @@ void Game::eventLoop()
 
     map_.reset(Map::createSlopeTestMap(graphics));
 
-    /*
     for (int i = 0; i < 3; ++i)
     {
         pickups_.add(std::make_shared<PowerDoritoPickup>(
@@ -67,7 +66,6 @@ void Game::eventLoop()
                 bat_->center_y(),
                 PowerDoritoPickup::MEDIUM));
     }
-     */
 
     bool running = true;
     units::MS last_update_time = SDL_GetTicks();

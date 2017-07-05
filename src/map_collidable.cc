@@ -14,10 +14,10 @@ namespace
     };
 
     boost::optional<CollisionInfo>
-    testMapCollision(const Map& map,
-                     const Rectangle& rectangle,
-                     sides::SideType direction,
-                     const boost::optional<tiles::TileType>& maybe_ground_tile)
+    testMapStickyCollision(const Map& map,
+                           const Rectangle& rectangle,
+                           sides::SideType direction,
+                           const boost::optional<tiles::TileType>& maybe_ground_tile)
     {
         std::vector<CollisionTile> tiles(map.getCollidingTiles(rectangle, direction));
         for (auto tile : tiles)
@@ -58,6 +58,39 @@ namespace
             }
         }
         return boost::none;
+    }
+
+    boost::optional<CollisionInfo>
+    testMapBouncingCollision(const Map& map,
+                             const Rectangle& rectangle,
+                             sides::SideType direction,
+                             const boost::optional<tiles::TileType>&)
+    {
+        std::vector<CollisionTile> tiles(map.getCollidingTiles(rectangle, direction));
+        boost::optional<CollisionInfo> result = boost::none;
+        for (auto tile : tiles)
+        {
+            const auto side = sides::opposite_side(direction);
+            const auto perpendicular_position = sides::vertical(side)
+                                                ? rectangle.center_x()
+                                                : rectangle.center_y();
+            const auto leading_position = rectangle.side(direction);
+            const auto should_test_slopes = sides::vertical(side);
+
+            const auto test_info = tile.testCollision(
+                    side,
+                    perpendicular_position,
+                    leading_position,
+                    should_test_slopes);
+
+            if (test_info.is_colliding)
+            {
+                const CollisionInfo info = { test_info.position,
+                                             tile.tile_type() };
+                result = info;
+            }
+        }
+        return result;
     }
 }
 
@@ -109,6 +142,10 @@ MapCollidable::update(const CollisionRectangle& collision_rectangle,
                       Kinematics& kinematics,
                       MapCollidable::AxisType axis)
 {
+    auto test_map_collision = collision_type_ == BOUNCING_COLLISION
+            ? testMapBouncingCollision
+            : testMapStickyCollision;
+
     accelerator.updateVelocity(kinematics, elapsed_time_ms);
 
     const units::Game delta = kinematics.velocity * elapsed_time_ms;
@@ -119,7 +156,7 @@ MapCollidable::update(const CollisionRectangle& collision_rectangle,
             : (delta > 0.0f ? sides::BOTTOM_SIDE : sides::TOP_SIDE);
 
     {
-        auto maybe_info = testMapCollision(
+        auto maybe_info = test_map_collision(
                 map,
                 collision_rectangle.collision(
                         direction,
@@ -146,7 +183,7 @@ MapCollidable::update(const CollisionRectangle& collision_rectangle,
     // Check collision in other direction
     const auto opposite_direction = sides::opposite_side(direction);
 
-    auto maybe_info = testMapCollision(
+    auto maybe_info = test_map_collision(
             map,
             collision_rectangle.collision(
                     opposite_direction,
