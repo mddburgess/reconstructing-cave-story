@@ -42,27 +42,34 @@ namespace
     }
 };
 
-boost::optional<units::Game>
+CollisionTile::TestCollisionInfo
 CollisionTile::testCollision(sides::SideType side,
                              units::Game perpendicular_position,
                              units::Game leading_position,
                              bool should_test_slopes) const
 {
+    TestCollisionInfo info = { false, leading_position };
+
     if (tile_type_[WALL])
     {
+        info.is_colliding = true;
         switch (side)
         {
             case sides::TOP_SIDE:
-                return units::tileToGame(row_);
+                info.position = units::tileToGame(row_);
+                break;
 
             case sides::BOTTOM_SIDE:
-                return units::tileToGame(row_ + 1);
+                info.position = units::tileToGame(row_ + 1);
+                break;
 
             case sides::LEFT_SIDE:
-                return units::tileToGame(col_);
+                info.position = units::tileToGame(col_);
+                break;
 
             case sides::RIGHT_SIDE:
-                return units::tileToGame(col_ + 1);
+                info.position = units::tileToGame(col_ + 1);
+                break;
         }
     }
     else if (should_test_slopes
@@ -81,11 +88,9 @@ CollisionTile::testCollision(sides::SideType side,
                 ? leading_position <= calculated_position
                 : leading_position >= calculated_position;
 
-        if (is_colliding)
-        {
-            return calculated_position;
-        }
+        info.is_colliding = is_colliding;
+        info.position = calculated_position;
     }
 
-    return boost::none;
+    return info;
 }

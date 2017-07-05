@@ -17,21 +17,21 @@ struct CollisionTile
     {
     }
 
-    ///
-    /// \param side The side of the tile that is being collided with.
-    /// \param perpendicular_position The position on the tile on the opposite
-    ///        axis of side.
-    /// \param leading_position Position of the leading edge of the colliding
-    ///        entity.
-    /// \param should_test_slopes Whether slopes should be considered for
-    ///        collision.
-    /// \return The position of the collision on the same axis of side, or
-    ///         boost::none if there was no collision.
-    ///
-    boost::optional<units::Game> testCollision(sides::SideType side,
-                                               units::Game perpendicular_position,
-                                               units::Game leading_position,
-                                               bool should_test_slopes) const;
+    struct TestCollisionInfo
+    {
+        bool is_colliding;
+        units::Game position;
+    };
+
+    TestCollisionInfo testCollision(sides::SideType side,
+                                    units::Game perpendicular_position,
+                                    units::Game leading_position,
+                                    bool should_test_slopes) const;
+
+    tiles::TileType tile_type() const
+    {
+        return tile_type_;
+    }
 
 private:
 

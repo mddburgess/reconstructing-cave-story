@@ -5,6 +5,7 @@
 #include "kinematics.h"
 #include "map_collidable.h"
 #include "pickup.h"
+#include "tile_type.h"
 
 struct PowerDoritoPickup : public Pickup,
                            private MapCollidable
@@ -33,7 +34,9 @@ struct PowerDoritoPickup : public Pickup,
 
 private:
 
-    void onCollision(sides::SideType side, bool is_delta_direction) override;
+    void onCollision(sides::SideType side,
+                     bool is_delta_direction,
+                     const tiles::TileType& tile_type) override;
 
     void onDelta(sides::SideType side) override
     {

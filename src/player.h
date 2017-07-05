@@ -1,6 +1,7 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
+#include <boost/optional.hpp>
 #include "damageable.h"
 #include "floating_number.h"
 #include "gun_experience_hud.h"
@@ -14,6 +15,7 @@
 #include "timer.h"
 #include "units.h"
 #include "varying_width_sprite.h"
+#include "tile_type.h"
 
 struct Graphics;
 struct Map;
@@ -162,14 +164,17 @@ private:
     void updateX(units::MS elapsed_time_ms, const Map& map);
     void updateY(units::MS elapsed_time_ms, const Map& map);
 
-    void onCollision(sides::SideType side, bool is_delta_direction) override;
+    void onCollision(sides::SideType side,
+                     bool is_delta_direction,
+                     const tiles::TileType& tile_type) override;
+
     void onDelta(sides::SideType side) override;
 
     MotionType motionType() const;
 
     bool onGround() const
     {
-        return on_ground_;
+        return static_cast<bool>(maybe_ground_tile_);
     }
 
     bool gun_up() const
@@ -192,7 +197,7 @@ private:
     int acceleration_x_;
     HorizontalFacing horizontal_facing_;
     VerticalFacing  intended_vertical_facing_;
-    bool on_ground_;
+    boost::optional<tiles::TileType> maybe_ground_tile_;
     bool jump_active_;
     bool interacting_;
     Health health_;

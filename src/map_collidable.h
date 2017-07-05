@@ -1,7 +1,9 @@
 #ifndef MAP_COLLIDABLE_H_
 #define MAP_COLLIDABLE_H_
 
+#include <boost/optional.hpp>
 #include "side_type.h"
+#include "tile_type.h"
 #include "units.h"
 
 struct Accelerator;
@@ -23,10 +25,12 @@ struct MapCollidable
                  const Kinematics& kinematics_x,
                  Kinematics& kinematics_y,
                  units::MS elapsed_time_ms,
-                 const Map& map);
+                 const Map& map,
+                 const boost::optional<tiles::TileType>& maybe_ground_tile);
 
     virtual void onCollision(sides::SideType side,
-                             bool is_delta_direction) = 0;
+                             bool is_delta_direction,
+                             const tiles::TileType& tile_type) = 0;
 
     virtual void onDelta(sides::SideType side) = 0;
 
@@ -48,6 +52,7 @@ private:
                 const Kinematics& kinematics_y,
                 units::MS elapsed_time_ms,
                 const Map& map,
+                const boost::optional<tiles::TileType>& maybe_ground_tile,
                 Kinematics& kinematics,
                 AxisType axis);
 

@@ -2,6 +2,7 @@
 
 #include "accelerators.h"
 #include "simple_collision_rectangle.h"
+#include "tile_type.h"
 
 const units::GunExperience kValues[] = { 1, 5, 20 };
 
@@ -60,16 +61,11 @@ bool PowerDoritoPickup::update(units::MS elapsed_time, const Map& map)
     sprite_.update();
 
     MapCollidable::updateY(kCollisionRectangles[size_],
-                           ConstantAccelerator::kGravity,
-                           kinematics_x_,
-                           kinematics_y_,
-                           elapsed_time,
-                           map);
-    MapCollidable::updateX(kCollisionRectangles[size_],
-                           kFriction,
-                           kinematics_x_,
-                           kinematics_y_,
-                           elapsed_time,
+                           ConstantAccelerator::kGravity, kinematics_x_,
+                           kinematics_y_, elapsed_time,
+                           map, boost::none);
+    MapCollidable::updateX(kCollisionRectangles[size_], kFriction,
+                           kinematics_x_, kinematics_y_, elapsed_time,
                            map);
 
     return timer_.active();
@@ -90,7 +86,8 @@ int PowerDoritoPickup::value() const
 }
 
 void PowerDoritoPickup::onCollision(sides::SideType side,
-                                    bool is_delta_direction)
+                                    bool is_delta_direction,
+                                    const tiles::TileType& tile_type)
 {
     switch (side)
     {
