@@ -97,7 +97,8 @@ void MapCollidable::update(const CollisionRectangle& collision_rectangle,
             kinematics.position = *maybe_position -
                     collision_rectangle.boundingBox().side(direction);
             onCollision(direction, true);
-        } else
+        }
+        else
         {
             kinematics.position += delta;
             onDelta(direction);

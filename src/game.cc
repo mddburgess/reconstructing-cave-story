@@ -56,7 +56,7 @@ void Game::eventLoop()
                                           units::tileToGame(kScreenHeight / 2 + 1));
     damage_texts_.addDamageable(bat_);
 
-    map_.reset(Map::createTestMap(graphics));
+    map_.reset(Map::createSlopeTestMap(graphics));
 
     for (int i = 0; i < 3; ++i)
     {

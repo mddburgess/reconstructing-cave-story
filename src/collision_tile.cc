@@ -3,7 +3,7 @@
 boost::optional<units::Game> CollisionTile::testCollision(sides::SideType side,
                                                           units::Game) const
 {
-    if (tile_type_ == tiles::WALL_TILE)
+    if (tile_type_[tiles::WALL])
     {
         switch (side)
         {
