@@ -217,7 +217,7 @@ void PolarStar::initializeSprites(Graphics& graphics)
                 units::tileToPixel(1),
                 units::tileToPixel(1));
     }
-};
+}
 
 void PolarStar::initializeSprite(Graphics& graphics, const SpriteState& sprite_state)
 {

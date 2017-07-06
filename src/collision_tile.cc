@@ -40,7 +40,7 @@ namespace
 
         return units::kHalfTile;
     }
-};
+}
 
 CollisionTile::TestCollisionInfo
 CollisionTile::testCollision(sides::SideType side,
