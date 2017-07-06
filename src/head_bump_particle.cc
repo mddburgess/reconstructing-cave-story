@@ -24,8 +24,8 @@ HeadBumpParticle::HeadBumpParticle(Graphics& graphics,
             units::gameToPixel(kHeight)),
     timer_(kLifetime, true),
     particle_a_(0, static_cast<units::Degrees>(rand() % 360)),
-    max_offset_a_(static_cast<units::Game>(4 + (rand() % 16))),
     particle_b_(0, static_cast<units::Degrees>(rand() % 360)),
+    max_offset_a_(static_cast<units::Game>(4 + (rand() % 16))),
     max_offset_b_(static_cast<units::Game>(4 + (rand() % 16)))
 {
 }

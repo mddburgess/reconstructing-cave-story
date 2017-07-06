@@ -19,8 +19,8 @@ FirstCaveBat::FirstCaveBat(Graphics& graphics, units::Game x, units::Game y) :
     alive_(true),
     x_(x),
     y_(y),
-    facing_(RIGHT),
-    flight_angle_(0.0f)
+    flight_angle_(0.0f),
+    facing_(RIGHT)
 {
     damage_text_ = std::make_shared<FloatingNumber>(FloatingNumber::DAMAGE);
     initializeSprites(graphics);
