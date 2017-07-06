@@ -87,8 +87,8 @@ int PowerDoritoPickup::value() const
 }
 
 void PowerDoritoPickup::onCollision(sides::SideType side,
-                                    bool is_delta_direction,
-                                    const tiles::TileType& tile_type)
+                                    bool,
+                                    const tiles::TileType&)
 {
     switch (side)
     {

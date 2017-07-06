@@ -23,7 +23,7 @@ ImmobileSingleLoopParticle::ImmobileSingleLoopParticle(Graphics& graphics,
 {
 }
 
-bool ImmobileSingleLoopParticle::update(units::MS elapsed_time)
+bool ImmobileSingleLoopParticle::update(units::MS)
 {
     sprite_.update();
     return sprite_.num_completed_loops() == 0;

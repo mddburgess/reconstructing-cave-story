@@ -38,7 +38,7 @@ private:
                      bool is_delta_direction,
                      const tiles::TileType& tile_type) override;
 
-    void onDelta(sides::SideType side) override
+    void onDelta(sides::SideType) override
     {
     }
 

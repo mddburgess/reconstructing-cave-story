@@ -54,7 +54,7 @@ Player::Health::Health(Graphics& graphics) :
 {
 }
 
-void Player::Health::update(units::MS elapsed_time) {
+void Player::Health::update(units::MS) {
     if (damage_ > 0 && damage_timer_.expired()) {
         current_health_ -= damage_;
         damage_ = 0;
