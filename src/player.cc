@@ -280,6 +280,7 @@ void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_stat
             break;
 
         case LAST_MOTION_TYPE:
+            tile_x = 0;
             break;
     }
     switch (sprite_state.vertical_facing())

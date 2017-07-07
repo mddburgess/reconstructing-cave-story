@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(CLANG_CXX_WARNINGS "-Weverything -Werror")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-c++98-compat")
-set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-conditional-uninitialized")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-deprecated")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-double-promotion")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-exit-time-destructors")
