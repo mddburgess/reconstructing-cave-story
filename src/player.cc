@@ -262,32 +262,40 @@ void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_stat
         case WALKING:
             tile_x = kWalkFrame;
             break;
+
         case STANDING:
             tile_x = kStandFrame;
             break;
+
         case INTERACTING:
             tile_x = kBackFrame;
             break;
+
         case JUMPING:
             tile_x = kJumpFrame;
             break;
+
         case FALLING:
             tile_x = kFallFrame;
             break;
-        default:
+
+        case LAST_MOTION_TYPE:
             break;
     }
     switch (sprite_state.vertical_facing())
     {
         case HORIZONTAL:
             break;
+
         case UP:
             tile_x += kUpFrameOffset;
             break;
+
         case DOWN:
             tile_x = kDownFrame;
             break;
-        default:
+
+        case LAST_VERTICAL_FACING:
             break;
     }
 
@@ -296,13 +304,16 @@ void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_stat
         switch (sprite_state.stride_type()) {
             case STRIDE_MIDDLE:
                 break;
+
             case STRIDE_LEFT:
                 tile_x += 1;
                 break;
+
             case STRIDE_RIGHT:
                 tile_x += 2;
                 break;
-            default:
+
+            case LAST_STRIDE_TYPE:
                 break;
         }
         sprites_[sprite_state] = std::make_shared<Sprite>(
@@ -449,7 +460,8 @@ void Player::onDelta(sides::SideType side)
             maybe_ground_tile_ = boost::none;
             break;
 
-        default:
+        case sides::LEFT_SIDE:
+        case sides::RIGHT_SIDE:
             break;
     }
 }
@@ -468,7 +480,7 @@ void Player::collectPickup(const Pickup& pickup)
             health_.addHealth(pickup.value());
             break;
 
-        default:
+        case Pickup::MISSILES:
             break;
     }
 }

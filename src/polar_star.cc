@@ -156,7 +156,7 @@ void PolarStar::startFire(units::Game player_x,
                         : kNozzleUpRightX;
             break;
 
-        default:
+        case LAST_VERTICAL_FACING:
             break;
     }
     if (!projectile_a_)
@@ -411,7 +411,8 @@ units::Game PolarStar::Projectile::getY() const
             y += offset_;
             break;
 
-        default:
+        case HORIZONTAL:
+        case LAST_VERTICAL_FACING:
             break;
     }
     return y;

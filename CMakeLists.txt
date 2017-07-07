@@ -14,7 +14,6 @@ set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-padded")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-shadow-field-in-constructor")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-shorten-64-to-32")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-sign-conversion")
-set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-switch-enum")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CLANG_CXX_WARNINGS}")
 
 find_package(Boost REQUIRED COMPONENTS system)

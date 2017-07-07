@@ -100,7 +100,8 @@ void PowerDoritoPickup::onCollision(sides::SideType side,
             kinematics_y_.velocity = -kBounceSpeed;
             break;
 
-        default:
+        case sides::LEFT_SIDE:
+        case sides::RIGHT_SIDE:
             kinematics_x_.velocity = -kinematics_x_.velocity;
             break;
     }
