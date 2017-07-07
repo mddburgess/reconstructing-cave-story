@@ -20,11 +20,7 @@ struct Pickup
     virtual void draw(Graphics& graphics) = 0;
     virtual int value() const = 0;
     virtual PickupType type() const = 0;
-    virtual ~Pickup() = 0;
+    virtual ~Pickup();
 };
-
-inline Pickup::~Pickup()
-{
-}
 
 #endif // PICKUP_H_

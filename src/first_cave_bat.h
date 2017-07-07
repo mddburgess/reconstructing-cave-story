@@ -16,6 +16,8 @@ struct FirstCaveBat : public Damageable
                  units::Game x,
                  units::Game y);
 
+    virtual ~FirstCaveBat() override;
+
     bool update(units::MS elapsed_time,
                 units::Game player_x);
 

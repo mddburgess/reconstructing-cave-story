@@ -37,11 +37,7 @@ struct CollisionRectangle
                                       units::Game y,
                                       units::Game delta) const = 0;
 
-    virtual ~CollisionRectangle() = 0;
+    virtual ~CollisionRectangle();
 };
-
-inline CollisionRectangle::~CollisionRectangle()
-{
-}
 
 #endif // COLLISION_RECTANGLE_H_

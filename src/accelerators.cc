@@ -11,6 +11,14 @@ const units::Velocity kTerminalVelocity = 0.2998046875f;
 const ZeroAccelerator ZeroAccelerator::kZero;
 const ConstantAccelerator ConstantAccelerator::kGravity(kGravityAcceleration, kTerminalVelocity);
 
+Accelerator::~Accelerator()
+{
+}
+
+void ZeroAccelerator::updateVelocity(Kinematics&, units::MS) const
+{
+}
+
 void FrictionAccelerator::updateVelocity(Kinematics& kinematics,
                                          units::MS elapsed_time) const
 {
@@ -33,3 +41,4 @@ void ConstantAccelerator::updateVelocity(Kinematics& kinematics,
                                        max_velocity_);
     }
 }
+

@@ -17,6 +17,8 @@ struct CompositeCollisionRectangle : CollisionRectangle
     {
     }
 
+    virtual ~CompositeCollisionRectangle() override;
+
     Rectangle boundingBox() const override
     {
         return Rectangle(left_.left(),

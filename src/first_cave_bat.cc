@@ -2,7 +2,6 @@
 #include "animated_sprite.h"
 #include "graphics.h"
 
-
 namespace
 {
     const units::Frame kNumFlyFrames = 3;
@@ -70,4 +69,8 @@ void FirstCaveBat::initializeSprite(Graphics& graphics,
 FirstCaveBat::SpriteState FirstCaveBat::getSpriteState() const
 {
     return SpriteState(facing_);
+}
+
+FirstCaveBat::~FirstCaveBat()
+{
 }

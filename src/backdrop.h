@@ -6,6 +6,7 @@
 
 struct Backdrop {
     virtual void draw(Graphics& graphics) const = 0;
+    virtual ~Backdrop();
 };
 
 struct FixedBackdrop : public Backdrop {

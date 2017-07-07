@@ -7,19 +7,27 @@
 
 struct Graphics;
 
-struct Sprite {
+struct Sprite
+{
     Sprite(Graphics& graphics,
            const std::string& file_name,
            units::Pixel source_x, units::Pixel source_y,
            units::Pixel width, units::Pixel height);
 
-    virtual void update() {}
+    virtual ~Sprite();
+
+    virtual void update()
+    {
+    }
+
     void draw(Graphics& graphics, units::Game x, units::Game y);
 
 protected:
+
     SDL_Rect source_rect_;
 
 private:
+
     SDL_Texture* sprite_sheet_;
 };
 

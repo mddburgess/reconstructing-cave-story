@@ -12,11 +12,7 @@ struct Damageable
     virtual units::Game center_y() const = 0;
     virtual std::shared_ptr<FloatingNumber> get_damage_text() = 0;
 
-    virtual ~Damageable() = 0;
+    virtual ~Damageable();
 };
-
-inline Damageable::~Damageable()
-{
-}
 
 #endif // DAMAGEABLE_H_

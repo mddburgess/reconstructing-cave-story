@@ -6,6 +6,10 @@ namespace {
     const units::Tile kBackgroundSize = 4;
 }
 
+Backdrop::~Backdrop()
+{
+}
+
 FixedBackdrop::FixedBackdrop(const std::string& file_name, Graphics& graphics) {
     surface_id_ = graphics.loadImage(file_name);
 }

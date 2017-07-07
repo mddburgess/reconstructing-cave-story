@@ -10,18 +10,12 @@ struct Accelerator
     virtual void updateVelocity(Kinematics& kinematics,
                                 units::MS elapsed_time) const = 0;
 
-    virtual ~Accelerator() = 0;
+    virtual ~Accelerator();
 };
-
-inline Accelerator::~Accelerator()
-{
-}
 
 struct ZeroAccelerator : Accelerator
 {
-    void updateVelocity(Kinematics&, units::MS) const override
-    {
-    }
+    void updateVelocity(Kinematics&, units::MS) const override;
 
     static const ZeroAccelerator kZero;
 };

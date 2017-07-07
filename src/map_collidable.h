@@ -45,9 +45,7 @@ struct MapCollidable
 
     virtual void onDelta(sides::SideType side) = 0;
 
-    virtual ~MapCollidable()
-    {
-    }
+    virtual ~MapCollidable();
 
 private:
 

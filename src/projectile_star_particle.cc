@@ -23,3 +23,7 @@ ProjectileStarParticle::ProjectileStarParticle(Graphics& graphics,
             kNumFrames, x, y)
 {
 }
+
+ProjectileStarParticle::~ProjectileStarParticle()
+{
+}

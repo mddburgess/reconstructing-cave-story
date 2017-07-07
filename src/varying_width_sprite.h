@@ -21,6 +21,8 @@ struct VaryingWidthSprite : public Sprite
     {
     }
 
+    virtual ~VaryingWidthSprite();
+
     void set_percentage_width(float percentage)
     {
         assert(percentage >= 0.0f && percentage <= 1.0f);

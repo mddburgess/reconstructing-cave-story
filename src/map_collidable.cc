@@ -200,3 +200,7 @@ MapCollidable::update(const CollisionRectangle& collision_rectangle,
         onCollision(opposite_direction, false, maybe_info->tile_type);
     }
 }
+
+MapCollidable::~MapCollidable()
+{
+}

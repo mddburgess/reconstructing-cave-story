@@ -9,6 +9,8 @@ struct ProjectileWallParticle : public ImmobileSingleLoopParticle
     ProjectileWallParticle(Graphics& graphics,
                            units::Game x,
                            units::Game y);
+
+    virtual ~ProjectileWallParticle() override;
 };
 
 #endif // PROJECTILE_WALL_PARTICLE_H_

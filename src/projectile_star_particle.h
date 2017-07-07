@@ -9,6 +9,8 @@ struct ProjectileStarParticle : public ImmobileSingleLoopParticle
     ProjectileStarParticle(Graphics& graphics,
                            units::Game x,
                            units::Game y);
+
+    virtual ~ProjectileStarParticle() override;
 };
 
 #endif // PROJECTILE_STAR_PARTICLE_H_

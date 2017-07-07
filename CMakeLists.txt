@@ -10,13 +10,11 @@ set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-deprecated")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-double-promotion")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-exit-time-destructors")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-global-constructors")
-set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-non-virtual-dtor")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-padded")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-shadow-field-in-constructor")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-shorten-64-to-32")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-sign-conversion")
 set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-switch-enum")
-set(CLANG_CXX_WARNINGS "${CLANG_CXX_WARNINGS} -Wno-weak-vtables")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CLANG_CXX_WARNINGS}")
 
 find_package(Boost REQUIRED COMPONENTS system)
@@ -32,14 +30,17 @@ set(SOURCE_FILES
         src/animated_sprite.h
         src/backdrop.cc
         src/backdrop.h
+        src/collision_rectangle.cc
         src/collision_rectangle.h
         src/collision_tile.cc
         src/collision_tile.h
+        src/composite_collision_rectangle.cc
         src/composite_collision_rectangle.h
         src/config.cc
         src/config.h
         src/damage_texts.cc
         src/damage_texts.h
+        src/damageable.cc
         src/damageable.h
         src/death_cloud_particle.cc
         src/death_cloud_particle.h
@@ -69,9 +70,11 @@ set(SOURCE_FILES
         src/map_collidable.h
         src/number_sprite.cc
         src/number_sprite.h
+        src/particle.cc
         src/particle.h
         src/particle_system.cc
         src/particle_system.h
+        src/pickup.cc
         src/pickup.h
         src/pickups.cc
         src/pickups.h
@@ -84,6 +87,7 @@ set(SOURCE_FILES
         src/polar_vector.h
         src/power_dorito_pickup.cc
         src/power_dorito_pickup.h
+        src/projectile.cc
         src/projectile.h
         src/projectile_star_particle.cc
         src/projectile_star_particle.h
@@ -100,6 +104,7 @@ set(SOURCE_FILES
         src/timer.cc
         src/timer.h
         src/units.h
+        src/varying_width_sprite.cc
         src/varying_width_sprite.h
         src/vector2d.h)
 

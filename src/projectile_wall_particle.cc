@@ -23,3 +23,7 @@ ProjectileWallParticle::ProjectileWallParticle(Graphics& graphics,
                                kNumFrames, x, y)
 {
 }
+
+ProjectileWallParticle::~ProjectileWallParticle()
+{
+}
